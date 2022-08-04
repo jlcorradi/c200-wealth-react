@@ -40,10 +40,9 @@ const providers = [
 
 const CombinedProvider = combineComponents(...providers);
 
-function App(): React.FC<{}> {
+function App() {
   const [{ isAuthenticated }] = useGlobalState();
 
-  // @ts-ignore
   return (
     <>
       {isAuthenticated ? (

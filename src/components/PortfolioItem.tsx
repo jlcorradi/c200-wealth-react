@@ -1,11 +1,12 @@
-import React from 'react';
-import { ArrayHelper, DateHelper, NumberHelper } from '../Helpers';
-import Indicator from './Indicator';
-import classNames from 'classnames';
-import DividendYieldService from '../services/DividendYieldService';
-import SimpleTable from './SimpleTable';
+import React from "react";
+import { ArrayHelper, DateHelper, NumberHelper } from "../Helpers";
+import classNames from "classnames";
+import DividendYieldService from "../services/DividendYieldService";
+// @ts-ignore
+import SimpleTable from "./SimpleTable";
+import { Indicator } from "./Indicator";
 
-function PortfolioItem({ item }) {
+export const PortfolioItem: React.FC<{ item: any }> = ({ item }) => {
   let outcome =
     ((item.lastPrice - item.adjustedAveragePrice) / item.adjustedAveragePrice) *
     100;
@@ -16,7 +17,8 @@ function PortfolioItem({ item }) {
     if (item.symbol) {
       DividendYieldService.getMonthlyDys(item.symbol).then(({ data }) => {
         setDividends(
-          ArrayHelper.sortDescending(data, 'month').map((dy) => ({
+          // @ts-ignore
+          ArrayHelper.sortDescending(data, "month").map((dy) => ({
             month: DateHelper.getMonthYear(dy.month),
             amount: dy.amount,
             percentage: (dy.amount / item.currentAmount) * 100,
@@ -38,7 +40,7 @@ function PortfolioItem({ item }) {
         <Indicator
           label="Outcome"
           value={NumberHelper.formatPercent(outcome)}
-          color={outcome < 0 ? 'danger' : 'income'}
+          color={outcome < 0 ? "danger" : "income"}
         />
       </div>
       <div className="flex flex-row padding align-items-center justify-content-center">
@@ -62,9 +64,10 @@ function PortfolioItem({ item }) {
         </div>
         <div
           className={classNames(
-            'flex flex-row flex-1 align-items-space-between padding-bottom',
+            "flex flex-row flex-1 align-items-space-between padding-bottom",
             {
-              danger: item.lastPrice < item.averagePrice < 0,
+              // @ts-ignore
+              danger: (item.lastPrice < item.averagePrice < 0),
             }
           )}
         >
@@ -73,7 +76,7 @@ function PortfolioItem({ item }) {
         </div>
         <div
           className={classNames(
-            'flex flex-row flex-1 align-items-space-between padding-bottom',
+            "flex flex-row flex-1 align-items-space-between padding-bottom",
             {
               danger: outcome < 0,
             }
@@ -84,7 +87,7 @@ function PortfolioItem({ item }) {
         </div>
         <div
           className={classNames(
-            'flex flex-row flex-1 align-items-space-between padding-bottom',
+            "flex flex-row flex-1 align-items-space-between padding-bottom",
             {
               danger: outcome < 0,
             }
@@ -126,15 +129,15 @@ function PortfolioItem({ item }) {
 
           <SimpleTable
             items={dividends}
-            fields={['month', 'amount:toBRL', 'percentage:percent']}
-            labels={['Month', 'Amount', '%']}
-            total={ArrayHelper.derivedSum(dividends, 'amount')}
+            fields={["month", "amount:toBRL", "percentage:percent"]}
+            labels={["Month", "Amount", "%"]}
+            total={ArrayHelper.derivedSum(dividends, "amount")}
           />
           <div className="flex padding flex-row">
             <div className="flex-1">Total</div>
             <strong>
               {NumberHelper.formatPercent(
-                ArrayHelper.derivedSum(dividends, 'percentage')
+                ArrayHelper.derivedSum(dividends, "percentage")
               )}
             </strong>
           </div>
@@ -142,6 +145,6 @@ function PortfolioItem({ item }) {
       </div>
     </>
   );
-}
+};
 
 export default PortfolioItem;

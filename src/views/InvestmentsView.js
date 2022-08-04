@@ -1,20 +1,20 @@
-import React from 'react';
-import PortfolioSummaryIndicators from '../components/PortfolioSummaryIndicators';
-import PortfolioWidget from '../components/PortfolioWidget';
-import StockDonutChart from '../components/StockDonutChart';
-import TabSet, { TabSheet } from '../components/TabSheet';
-import { ArrayHelper } from '../Helpers';
-import { usePortfolioStateContext } from '../store/PortfolioStateContext';
-import DividendYieldService from '../services/DividendYieldService';
-import moment from 'moment';
-import DividendYieldEvolutionChart from '../components/DividendYieldEvolutionChart';
-import DividendYieldOffCanva from '../components/DividendYieldOffCanva';
-import PortfolioItem from '../components/PortfolioItem';
-import DividendYieldList from '../components/DividendYieldList';
-import StockOperationList from '../components/StockOperationList';
-import OffCanva from '../template/OffCanva';
-import WatchListList from '../components/WatchListList';
-import DyMatrix from '../components/DyMatrix';
+import React from "react";
+import PortfolioSummaryIndicators from "../components/PortfolioSummaryIndicators";
+import PortfolioWidget from "../components/PortfolioWidget";
+import StockDonutChart from "../components/StockDonutChart";
+import TabSet, { TabSheet } from "../components/TabSheet";
+import { ArrayHelper } from "../Helpers";
+import { usePortfolioStateContext } from "../store/PortfolioStateContext";
+import DividendYieldService from "../services/DividendYieldService";
+import moment from "moment";
+import DividendYieldEvolutionChart from "../components/DividendYieldEvolutionChart";
+import DividendYieldOffCanva from "../components/DividendYieldOffCanva";
+import PortfolioItem from "../components/PortfolioItem";
+import DividendYieldList from "../components/DividendYieldList";
+import StockOperationList from "../components/StockOperationList";
+import OffCanva from "../template/OffCanva";
+import WatchListList from "../components/WatchListList";
+import DyMatrix from "../components/DyMatrix";
 
 function InvestmentsView() {
   const [{ stocks, fiis, bySector }, portfolioDispatch] =
@@ -24,9 +24,10 @@ function InvestmentsView() {
   const [totalDyLast12Months, setTodalDyLast12Months] = React.useState(0);
 
   let initDate = moment()
-    .startOf('month')
-    .subtract(11, 'months')
-    .format('DD/MM/YYYY');
+    .add("month", -1)
+    .startOf("month")
+    .subtract(11, "months")
+    .format("DD/MM/YYYY");
   let [dividendData, setDividendData] = React.useState({
     barSeries: [],
     monthArray: [],
@@ -39,7 +40,7 @@ function InvestmentsView() {
   React.useEffect(() => {
     DividendYieldService.getDashboardData(
       initDate,
-      moment().endOf('month').format('DD/MM/YYYY')
+      moment().add("month", -1).endOf("month").format("DD/MM/YYYY")
     ).then(({ data }) => {
       setDividendData(data);
       setTodalDyLast12Months(data.totalDividendsLast12Months);
@@ -47,7 +48,7 @@ function InvestmentsView() {
   }, []);
 
   React.useEffect(() => {
-    portfolioDispatch({ type: 'LOAD' });
+    portfolioDispatch({ type: "LOAD" });
   }, []);
 
   let { monthArray, barSeries } = dividendData;
@@ -81,17 +82,17 @@ function InvestmentsView() {
                 width="380"
                 stocks={[
                   {
-                    symbol: 'Stock',
+                    symbol: "Stock",
                     currentAmount: ArrayHelper.derivedSum(
                       stocks,
-                      'currentAmount'
+                      "currentAmount"
                     ),
                   },
                   {
-                    symbol: 'FII',
+                    symbol: "FII",
                     currentAmount: ArrayHelper.derivedSum(
                       fiis,
-                      'currentAmount'
+                      "currentAmount"
                     ),
                   },
                 ]}
@@ -109,21 +110,6 @@ function InvestmentsView() {
                   setDyOffcanvaVisible(true);
                 }}
               />
-            </div>
-          </div>
-          <div className="row margin-v">
-            <div className="margin-v">
-              <div className="title margin-bottom">
-                <h3>Stocks Dividend Matrix</h3>
-              </div>
-              <DyMatrix category="STOCK"></DyMatrix>
-            </div>
-
-            <div className="margin-v">
-              <div className="title margin-bottom">
-                <h3>FIIS Dividend Matrix</h3>
-              </div>
-              <DyMatrix category="FII"></DyMatrix>
             </div>
           </div>
         </TabSheet>

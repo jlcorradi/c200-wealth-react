@@ -1,23 +1,30 @@
-import React from 'react';
-import ExpensesPerCategory from '../components/ExpensesPerCategory';
-import Indicator from '../components/Indicator';
-import PendingExpenseIncome from '../components/PendingExpenseIncome';
-import { NumberHelper } from '../Helpers';
-import { useGlobalState } from '../store/GlobalStateContext';
-import NotificationWidget from '../components/NotificationWidget';
+import React from "react";
+// @ts-ignore
+import ExpensesPerCategory from "../components/ExpensesPerCategory";
+// @ts-ignore
+import PendingExpenseIncome from "../components/PendingExpenseIncome";
+import { NumberHelper } from "../Helpers";
+// @ts-ignore
+import { useGlobalState } from "../store/GlobalStateContext";
+// @ts-ignore
+import NotificationWidget from "../components/NotificationWidget";
+// @ts-ignore
 import {
   DashboardActions,
   useDashboardContext,
-} from '../store/DashBoardStateContext';
-import ReactApexChart from 'react-apexcharts';
-import LoaderAndEmptyWrapper from '../components/LoaderAndEmptyWrapper';
+  //@ts-ignore
+} from "../store/DashBoardStateContext";
+import ReactApexChart from "react-apexcharts";
+// @ts-ignore
+import LoaderAndEmptyWrapper from "../components/LoaderAndEmptyWrapper";
+import { Indicator } from "../components/Indicator";
 
-function DashboardView() {
+export const DashboardView: React.FC<{}> = () => {
   const [{ monthlyExpenseIncomeSummary, expenseIncomeSum }, dispatch] =
     useDashboardContext();
 
   const [{ notifications }] = useGlobalState();
-  
+
   React.useEffect(() => {
     dispatch(DashboardActions.loadExpenseIncomeSum());
     dispatch(DashboardActions.loadMonthlyExpenseIncomeSummary());
@@ -33,23 +40,23 @@ function DashboardView() {
         <Indicator
           label="Pending Expenses"
           color="danger"
-          value={NumberHelper.formatBRL(expenseIncomeSum['pendingExpenses'])}
+          value={NumberHelper.formatBRL(expenseIncomeSum["pendingExpenses"])}
           icon="bx-archive-out"
         />
         <Indicator
           label="Total Expenses"
           color="danger"
-          value={NumberHelper.formatBRL(expenseIncomeSum['totalExpenses'])}
+          value={NumberHelper.formatBRL(expenseIncomeSum["totalExpenses"])}
           icon="bxs-archive-out"
         />
         <Indicator
           label="Pending Income"
-          value={NumberHelper.formatBRL(expenseIncomeSum['pendingIncome'])}
+          value={NumberHelper.formatBRL(expenseIncomeSum["pendingIncome"])}
           icon="bx-archive-in"
         />
         <Indicator
           label="Total Income"
-          value={NumberHelper.formatBRL(expenseIncomeSum['totalIncome'])}
+          value={NumberHelper.formatBRL(expenseIncomeSum["totalIncome"])}
           icon="bxs-archive-in"
         />
       </div>
@@ -96,21 +103,21 @@ function DashboardView() {
                 width={600}
                 series={[
                   {
-                    name: 'Expenses',
+                    name: "Expenses",
                     data: monthlyExpenseIncomeSummary.expenses.map(
-                      (i) => i.amount
+                      (i: any) => i.amount
                     ),
                   },
                   {
-                    name: 'Incomes',
+                    name: "Incomes",
                     data: monthlyExpenseIncomeSummary.incomes.map(
-                      (i) => i.amount
+                      (i: any) => i.amount
                     ),
                   },
                 ]}
                 options={{
                   labels: monthlyExpenseIncomeSummary.expenses.map(
-                    (i) => i.month
+                    (i: any) => i.month
                   ),
                   dataLabels: { enabled: false },
                   xaxis: {
@@ -124,6 +131,6 @@ function DashboardView() {
       </div>
     </>
   );
-}
+};
 
 export default DashboardView;

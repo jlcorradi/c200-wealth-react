@@ -1,10 +1,24 @@
-import React from 'react';
-import Indicator from './Indicator';
-import { NumberHelper } from '../Helpers';
-import { usePortfolioStateContext } from '../store/PortfolioStateContext';
+import React from "react";
+import { Indicator } from "./Indicator";
+import { NumberHelper } from "../Helpers";
+import { usePortfolioStateContext } from "../store/PortfolioStateContext";
+import QueryService from "../services/QueryService";
+import moment from "moment";
 
-function PortfolioSummaryIndicators({ avgMonthlyDividend }) {
+export const PortfolioSummaryIndicators: React.FC<{
+  avgMonthlyDividend: number;
+}> = ({ avgMonthlyDividend }) => {
   const [{ summary }] = usePortfolioStateContext();
+  const [dyMonthTd, setDyMonthTD] = React.useState<number>(0);
+
+  React.useEffect(() => {
+    QueryService.sum("DividendYieldEntity", "amount", {
+      paymentDate: [
+        moment().startOf("month").format("DD/MM/YYYY"),
+        moment().endOf("month").format("DD/MM/YYYY"),
+      ],
+    }).then(({ data }) => setDyMonthTD(data));
+  }, []);
 
   return (
     <>
@@ -20,12 +34,6 @@ function PortfolioSummaryIndicators({ avgMonthlyDividend }) {
         value={NumberHelper.formatBRL(summary.totalCurrentFII)}
         icon="bx-building-house"
       />
-      {/* <Indicator
-        label="Total invested"
-        color="default"
-        value={NumberHelper.formatBRL(summary.totalInvested)}
-        icon="bx-detail"
-      /> */}
       <Indicator
         label="Total Current"
         color="default"
@@ -36,8 +44,8 @@ function PortfolioSummaryIndicators({ avgMonthlyDividend }) {
         label="Outcome"
         color={
           summary.totalCurrent - summary.totalInvested > 0
-            ? 'default'
-            : 'danger'
+            ? "default"
+            : "danger"
         }
         value={NumberHelper.formatPercent(
           ((summary.totalCurrent - summary.totalInvested) /
@@ -47,12 +55,17 @@ function PortfolioSummaryIndicators({ avgMonthlyDividend }) {
         icon="bx-detail"
       />
       <Indicator
+        label="DY Month TD"
+        value={NumberHelper.formatBRL(dyMonthTd)}
+        icon="bxs-archive-in"
+      />
+      <Indicator
         label="AVG monthly dividends"
         value={NumberHelper.formatBRL(avgMonthlyDividend)}
         icon="bxs-archive-in"
       />
     </>
   );
-}
+};
 
 export default PortfolioSummaryIndicators;
