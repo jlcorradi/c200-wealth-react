@@ -1,26 +1,38 @@
 import React from "react";
 import PortfolioSummaryIndicators from "../components/PortfolioSummaryIndicators";
+// @ts-ignore
 import PortfolioWidget from "../components/PortfolioWidget";
+// @ts-ignore
 import StockDonutChart from "../components/StockDonutChart";
+// @ts-ignore
 import TabSet, { TabSheet } from "../components/TabSheet";
 import { ArrayHelper } from "../Helpers";
 import { usePortfolioStateContext } from "../store/PortfolioStateContext";
 import DividendYieldService from "../services/DividendYieldService";
 import moment from "moment";
+// @ts-ignore
 import DividendYieldEvolutionChart from "../components/DividendYieldEvolutionChart";
+// @ts-ignore
 import DividendYieldOffCanva from "../components/DividendYieldOffCanva";
 import PortfolioItem from "../components/PortfolioItem";
+// @ts-ignore
 import DividendYieldList from "../components/DividendYieldList";
+// @ts-ignore
 import StockOperationList from "../components/StockOperationList";
+// @ts-ignore
 import OffCanva from "../template/OffCanva";
+// @ts-ignore
 import WatchListList from "../components/WatchListList";
-import DyMatrix from "../components/DyMatrix";
+import { IPortfolioEntity } from "../types/portfolio";
 
 function InvestmentsView() {
-  const [{ stocks, fiis, bySector }, portfolioDispatch] =
-    usePortfolioStateContext();
+  // @ts-ignore
+  const { state, dispatch } = usePortfolioStateContext();
+  const { stocks, fiis, bySector } = state;
+
   const [portfolioItemVisible, setPortfolioItemVisible] = React.useState(false);
-  const [portfolioItemToShow, setPortfolioItemToShow] = React.useState({});
+  const [portfolioItemToShow, setPortfolioItemToShow] =
+    React.useState<IPortfolioEntity>({} as unknown as IPortfolioEntity);
   const [totalDyLast12Months, setTodalDyLast12Months] = React.useState(0);
 
   let initDate = moment()
@@ -32,8 +44,9 @@ function InvestmentsView() {
     barSeries: [],
     monthArray: [],
   });
-  let [monthToShowDetail, setMonthToShowDetail] = React.useState();
-  let [dyOffcanvaVisible, setDyOffcanvaVisible] = React.useState(false);
+  let [monthToShowDetail, setMonthToShowDetail] = React.useState<string>();
+  let [dyOffcanvaVisible, setDyOffcanvaVisible] =
+    React.useState<boolean>(false);
 
   const [showStocksBySector, setShowStocksBySector] = React.useState(false);
 
@@ -48,12 +61,12 @@ function InvestmentsView() {
   }, []);
 
   React.useEffect(() => {
-    portfolioDispatch({ type: "LOAD" });
+    dispatch({ type: "LOAD" });
   }, []);
 
   let { monthArray, barSeries } = dividendData;
 
-  function portfolioItemClick(item) {
+  function portfolioItemClick(item: IPortfolioEntity) {
     console.log(item);
     setPortfolioItemToShow(item);
     setPortfolioItemVisible(true);
@@ -105,7 +118,7 @@ function InvestmentsView() {
               <DividendYieldEvolutionChart
                 monthArray={monthArray}
                 barSeries={barSeries}
-                onSelectMonth={(month) => {
+                onSelectMonth={(month: string) => {
                   setMonthToShowDetail(month);
                   setDyOffcanvaVisible(true);
                 }}
@@ -126,7 +139,7 @@ function InvestmentsView() {
                     checked={showStocksBySector}
                     onChange={(e) => setShowStocksBySector(e.target.checked)}
                   />
-                  <label className="margin-left" for="scales">
+                  <label className="margin-left" htmlFor="scales">
                     Group By Sector
                   </label>
                 </div>

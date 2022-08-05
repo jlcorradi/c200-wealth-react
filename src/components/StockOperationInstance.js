@@ -30,7 +30,7 @@ function StockOperationInstance({onSave, onHide}) {
   const [errors, setErrors] = useState({});
   const [accounts, setAccounts] = useState([]);
 
-  const [, dispatchPortfolioEvent] = usePortfolioStateContext();
+  const {state, dispatchPortfolioEvent} = usePortfolioStateContext();
 
   useEffect(() => {
     BankAccountService.getInvestmentAccounts().then((response) => setAccounts(response.data));

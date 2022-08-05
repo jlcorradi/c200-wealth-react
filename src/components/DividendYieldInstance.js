@@ -1,47 +1,47 @@
-import classNames from 'classnames';
-import React, { useEffect, useState } from 'react';
-import BankAccountService from '../services/BankAccountServices';
-import DividendYieldService from '../services/DividendYieldService';
+import classNames from "classnames";
+import React, { useEffect, useState } from "react";
+import BankAccountService from "../services/BankAccountServices";
+import DividendYieldService from "../services/DividendYieldService";
 import {
   DashboardActions,
   useDashboardContext,
-} from '../store/DashBoardStateContext';
+} from "../store/DashBoardStateContext";
 import {
   DividendYieldActions,
   useDividendYieldStateContext,
-} from '../store/DividendYieldStateContext';
+} from "../store/DividendYieldStateContext";
 import {
   load as loadPortfolio,
   usePortfolioStateContext,
-} from '../store/PortfolioStateContext';
-import OffCanva from '../template/OffCanva';
+} from "../store/PortfolioStateContext";
+import OffCanva from "../template/OffCanva";
 import {
   hasErrors,
   required,
   ruleRunner,
   runValidations,
-} from '../Validatoion';
+} from "../Validatoion";
 
 const validationRules = [
-  ruleRunner('bankAccountId', 'BankAccount', required),
-  ruleRunner('paymentDate', 'Payment Date', required),
-  ruleRunner('symbol', 'Symbol', required),
-  ruleRunner('yieldType', 'Yield Type', required),
-  ruleRunner('amount', 'Amount', required),
+  ruleRunner("bankAccountId", "BankAccount", required),
+  ruleRunner("paymentDate", "Payment Date", required),
+  ruleRunner("symbol", "Symbol", required),
+  ruleRunner("yieldType", "Yield Type", required),
+  ruleRunner("amount", "Amount", required),
 ];
 
 const EMPTY_MODEL = {
-  paymentDate: '',
-  symbol: '',
-  yieldType: '',
+  paymentDate: "",
+  symbol: "",
+  yieldType: "",
   quantity: 0,
   amount: 0.0,
-  bankAccountId: '',
+  bankAccountId: "",
 };
 
 function DividendYieldInstance({ visible, onDismiss }) {
   const [, dispatchDYEvent] = useDividendYieldStateContext();
-  const [, dispatchPortfolioEvent] = usePortfolioStateContext();
+  const { state, dispatchPortfolioEvent } = usePortfolioStateContext();
   const [, dashboardDispatch] = useDashboardContext();
 
   const [model, seetModel] = useState(EMPTY_MODEL);
@@ -87,13 +87,13 @@ function DividendYieldInstance({ visible, onDismiss }) {
     <OffCanva visible={visible} onDismiss={onDismiss}>
       <form
         onSubmit={onSubmit}
-        className={classNames('flex', 'flex-column', { submitted: submitted })}
+        className={classNames("flex", "flex-column", { submitted: submitted })}
       >
         <div className="titlebar">
           <h3>Registering DY Received</h3>
         </div>
         <div
-          className={classNames('form-group', 'padding-h', 'flex-1', {
+          className={classNames("form-group", "padding-h", "flex-1", {
             error: errors.bankAccountId,
           })}
         >
@@ -117,7 +117,7 @@ function DividendYieldInstance({ visible, onDismiss }) {
         </div>
         <div className="flex flex-row">
           <div
-            className={classNames('form-group', 'padding-h', 'w200', {
+            className={classNames("form-group", "padding-h", "w200", {
               error: errors.paymentDate,
             })}
           >
@@ -132,7 +132,7 @@ function DividendYieldInstance({ visible, onDismiss }) {
             <small>{errors.paymentDate}</small>
           </div>
           <div
-            className={classNames('form-group', 'padding-h', 'flex-1', {
+            className={classNames("form-group", "padding-h", "flex-1", {
               error: errors.symbol,
             })}
           >
@@ -150,7 +150,7 @@ function DividendYieldInstance({ visible, onDismiss }) {
         </div>
         <div className="flex flex-row">
           <div
-            className={classNames('form-group', 'padding-h', 'flex-1', {
+            className={classNames("form-group", "padding-h", "flex-1", {
               error: errors.amount,
             })}
           >
@@ -174,7 +174,7 @@ function DividendYieldInstance({ visible, onDismiss }) {
           </div>
         </div>
         <div
-          className={classNames('form-group', 'padding-h', 'flex-1', {
+          className={classNames("form-group", "padding-h", "flex-1", {
             error: errors.yieldType,
           })}
         >
@@ -194,7 +194,7 @@ function DividendYieldInstance({ visible, onDismiss }) {
           </select>
           <small>{errors.yieldType}</small>
         </div>
-        <div className="buttons" style={{ alignSelf: 'flex-end' }}>
+        <div className="buttons" style={{ alignSelf: "flex-end" }}>
           <button type="submit">
             <i className="bx bx-save"></i>Save
           </button>

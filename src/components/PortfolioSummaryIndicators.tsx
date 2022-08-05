@@ -8,7 +8,8 @@ import moment from "moment";
 export const PortfolioSummaryIndicators: React.FC<{
   avgMonthlyDividend: number;
 }> = ({ avgMonthlyDividend }) => {
-  const [{ summary }] = usePortfolioStateContext();
+  const ctx = usePortfolioStateContext();
+  const summary = ctx?.state?.summary;
   const [dyMonthTd, setDyMonthTD] = React.useState<number>(0);
 
   React.useEffect(() => {
@@ -20,38 +21,38 @@ export const PortfolioSummaryIndicators: React.FC<{
     }).then(({ data }) => setDyMonthTD(data));
   }, []);
 
+  const outcome =
+    (summary?.totalCurrent ?? 0 - (summary?.totalInvested ?? 0)) /
+    (summary?.totalInvested ?? 0);
+
   return (
     <>
       <Indicator
         label="Total In Stocks"
         color="default"
-        value={NumberHelper.formatBRL(summary.totalCurrentStocks)}
+        value={NumberHelper.formatBRL(summary?.totalCurrentStocks ?? 0)}
         icon="bx-label"
       />
       <Indicator
         label="Total In FIIs"
         color="default"
-        value={NumberHelper.formatBRL(summary.totalCurrentFII)}
+        value={NumberHelper.formatBRL(summary?.totalCurrentFII ?? 0)}
         icon="bx-building-house"
       />
       <Indicator
         label="Total Current"
         color="default"
-        value={NumberHelper.formatBRL(summary.totalCurrent)}
+        value={NumberHelper.formatBRL(summary?.totalCurrent ?? 0)}
         icon="bx-detail"
       />
       <Indicator
         label="Outcome"
         color={
-          summary.totalCurrent - summary.totalInvested > 0
+          outcome > 0
             ? "default"
             : "danger"
         }
-        value={NumberHelper.formatPercent(
-          ((summary.totalCurrent - summary.totalInvested) /
-            summary.totalInvested) *
-            100
-        )}
+        value={NumberHelper.formatPercent(outcome)}
         icon="bx-detail"
       />
       <Indicator

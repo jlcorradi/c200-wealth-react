@@ -5,8 +5,11 @@ import DividendYieldService from "../services/DividendYieldService";
 // @ts-ignore
 import SimpleTable from "./SimpleTable";
 import { Indicator } from "./Indicator";
+import { IPortfolioEntity } from "../types/portfolio";
 
-export const PortfolioItem: React.FC<{ item: any }> = ({ item }) => {
+export const PortfolioItem: React.FC<{ item: IPortfolioEntity }> = ({
+  item,
+}) => {
   let outcome =
     ((item.lastPrice - item.adjustedAveragePrice) / item.adjustedAveragePrice) *
     100;
@@ -67,7 +70,7 @@ export const PortfolioItem: React.FC<{ item: any }> = ({ item }) => {
             "flex flex-row flex-1 align-items-space-between padding-bottom",
             {
               // @ts-ignore
-              danger: (item.lastPrice < item.averagePrice < 0),
+              danger: item.lastPrice < item.averagePrice < 0,
             }
           )}
         >

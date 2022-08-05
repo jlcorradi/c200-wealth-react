@@ -1,17 +1,13 @@
-import React from "react";
+import React, { Dispatch } from "react";
 import { ArrayHelper } from "../Helpers";
 import PortfolioService from "../services/PortfolioService";
 
 type Action = "LOAD" | "SET_SUMMARY" | "SET_PORTFOLIO";
 
-export interface PortfolioAction {
+export interface IPortfolioAction {
   type: Action;
   payload: any;
 }
-
-const PortfolioContext = React.createContext<any | null>(null);
-
-export const load = () => ({ action: "LOAD" });
 
 const portfolioInitialState = {
   portfolioLoadPending: true,
@@ -28,7 +24,16 @@ const portfolioInitialState = {
   bySector: [],
 };
 
-const portfolioReducer = (state: any, { type, payload }: PortfolioAction) => {
+export type PortfolioState = typeof portfolioInitialState;
+
+const PortfolioContext = React.createContext<{
+  state: PortfolioState;
+  dispatch: Dispatch<IPortfolioAction>;
+} | null>(null);
+
+export const load = () => ({ action: "LOAD" });
+
+const portfolioReducer = (state: any, { type, payload }: IPortfolioAction) => {
   switch (type) {
     case "LOAD":
       return { ...state, portfolioLoadPending: true };
@@ -65,6 +70,7 @@ export const PortfolioContextProvider: React.FC<React.PropsWithChildren> = ({
           },
         });
 
+        // @ts-ignore
         let { stocks, fiis, bySector } = data;
         let bySectorArray = Object.keys(bySector).map((symbol) => ({
           symbol,
@@ -86,7 +92,7 @@ export const PortfolioContextProvider: React.FC<React.PropsWithChildren> = ({
   }, [portfolioLoadPending]);
 
   return (
-    <PortfolioContext.Provider value={[state, dispatch]}>
+    <PortfolioContext.Provider value={{ state, dispatch }}>
       {children}
     </PortfolioContext.Provider>
   );

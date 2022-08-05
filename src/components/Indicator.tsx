@@ -3,7 +3,7 @@ import React from "react";
 
 export const Indicator: React.FC<{
   label: string;
-  value: string;
+  value: number | string;
   icon?: string;
   color?: string;
 }> = ({ label, value, icon, color }) => {

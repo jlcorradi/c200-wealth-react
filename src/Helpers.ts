@@ -1,19 +1,23 @@
-function parseFload(value: string) {
-  try {
-    return Number.parseFloat(value as string);
-  } catch (e) {
-    return 0;
-  }
-}
-
 export const NumberHelper = {
-  formatBRL: (value: string | number) =>
-    parseFload(value as string).toLocaleString("pt-br", {
+  parseFloat: (value: string) => {
+    try {
+      return Number.parseFloat(value as string);
+    } catch (e) {
+      return 0;
+    }
+  },
+  formatBRL: (value: number) =>
+    (value ?? 0).toLocaleString("pt-br", {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }),
-  formatPercent: (value: string | number) =>
-    parseFload(value as string).toFixed(2) + "%",
+  formatPercent: (value: number) => (value ?? 0).toFixed(2) + "%",
+  formatStringAsBRL: (value: string) =>
+    parseFloat(value).toLocaleString("pt-br", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }),
+  formatStringAsPercent: (value: string) => parseFloat(value).toFixed(2) + "%",
 };
 
 export const StringHelper = {
