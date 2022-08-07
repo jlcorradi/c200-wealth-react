@@ -1,41 +1,41 @@
-import classNames from 'classnames';
-import React, { useEffect, useState } from 'react';
-import ExpenseIncomeService from '../services/ExpenseIncomeService';
-import KeyValuePairService from '../services/KeyValuePairService';
+import classNames from "classnames";
+import React, { useEffect, useState } from "react";
+import { ExpenseIncomeService } from "../services/ExpenseIncomeService";
+import KeyValuePairService from "../services/KeyValuePairService";
 import {
   hasErrors,
   minValue,
   required,
   ruleRunner,
   runValidations,
-} from '../Validatoion';
-import BankAccountCombo from './BankAccountCombo';
-import LoaderAndEmptyWrapper from './LoaderAndEmptyWrapper';
+} from "../Validatoion";
+import BankAccountCombo from "./BankAccountCombo";
+import LoaderAndEmptyWrapper from "./LoaderAndEmptyWrapper";
 
 const EMPTY_MODEL = {
-  paymentType: '',
-  dueDate: '',
-  categoryId: '',
+  paymentType: "",
+  dueDate: "",
+  categoryId: "",
   amount: 0.0,
-  history: '',
+  history: "",
   bankAccountId: null,
-  paymentDate: '',
+  paymentDate: "",
   paidAmount: 0,
   feesAndInterest: 0,
 };
 
 const validationRules = [
-  ruleRunner('paymentType', 'Type', required),
-  ruleRunner('dueDate', 'Due Date', required),
-  ruleRunner('categoryId', 'Category', required),
-  ruleRunner('amount', 'Amount', required, minValue(0.01)),
-  ruleRunner('history', 'History', required),
+  ruleRunner("paymentType", "Type", required),
+  ruleRunner("dueDate", "Due Date", required),
+  ruleRunner("categoryId", "Category", required),
+  ruleRunner("amount", "Amount", required, minValue(0.01)),
+  ruleRunner("history", "History", required),
 ];
 
 const paymentValidationRules = [
-  ruleRunner('bankAccountId', 'Bank Account', required),
-  ruleRunner('paymentDate', 'Payment Date', required),
-  ruleRunner('paidAmount', 'Paid Amount', required),
+  ruleRunner("bankAccountId", "Bank Account", required),
+  ruleRunner("paymentDate", "Payment Date", required),
+  ruleRunner("paidAmount", "Paid Amount", required),
 ];
 
 function ExpenseIncomeInstance({ id, onSave, onDismiss, showVertically }) {
@@ -118,7 +118,7 @@ function ExpenseIncomeInstance({ id, onSave, onDismiss, showVertically }) {
         ...newModel,
         paymentDate: newModel.dueDate,
         paidAmount: newModel.amount,
-        status: 'PAID',
+        status: "PAID",
       });
     }
 
@@ -133,19 +133,19 @@ function ExpenseIncomeInstance({ id, onSave, onDismiss, showVertically }) {
     <LoaderAndEmptyWrapper isLoading={isLoading} isEmpty={false}>
       <form
         onSubmit={submit}
-        className={classNames('flex', 'flex-column', { submitted: submitted })}
+        className={classNames("flex", "flex-column", { submitted: submitted })}
       >
         <div
-          className={classNames('flex border-bottom padding-v', {
-            'flex-column': showVertically,
-            'flex-row': !showVertically,
+          className={classNames("flex border-bottom padding-v", {
+            "flex-column": showVertically,
+            "flex-row": !showVertically,
           })}
         >
           <div className="flex-1 padding flex flex-column">
             <div className="flex flex-row">
               <div
-                className={classNames('form-group', 'flex-1', {
-                  error: errors['paymentType'],
+                className={classNames("form-group", "flex-1", {
+                  error: errors["paymentType"],
                 })}
               >
                 <label htmlFor="paymentType">Payment Type</label>
@@ -153,7 +153,7 @@ function ExpenseIncomeInstance({ id, onSave, onDismiss, showVertically }) {
                   name="paymentType"
                   id="paymentType"
                   onChange={(e) => onChange(e.target.name, e.target.value)}
-                  value={model['paymentType']}
+                  value={model["paymentType"]}
                 >
                   <option value="" defaultValue>
                     Select
@@ -161,12 +161,12 @@ function ExpenseIncomeInstance({ id, onSave, onDismiss, showVertically }) {
                   <option value="EXPENSE">Expense</option>
                   <option value="INCOME">Income</option>
                 </select>
-                <small>{errors['paymentType']}</small>
+                <small>{errors["paymentType"]}</small>
               </div>
 
               <div
-                className={classNames('form-group', 'margin-left', 'flex-1', {
-                  error: errors['dueDate'],
+                className={classNames("form-group", "margin-left", "flex-1", {
+                  error: errors["dueDate"],
                 })}
               >
                 <label htmlFor="paymentType">Due Date</label>
@@ -175,16 +175,16 @@ function ExpenseIncomeInstance({ id, onSave, onDismiss, showVertically }) {
                   name="dueDate"
                   id="dueDate"
                   onChange={(e) => onChange(e.target.name, e.target.value)}
-                  value={model['dueDate']}
+                  value={model["dueDate"]}
                   placeholder="dd/MM/yyyy"
                 />
-                <small>{errors['dueDate']}</small>
+                <small>{errors["dueDate"]}</small>
               </div>
             </div>
 
             <div
-              className={classNames('form-group', 'flex-1', {
-                error: errors['categoryId'],
+              className={classNames("form-group", "flex-1", {
+                error: errors["categoryId"],
               })}
             >
               <label htmlFor="categoryId">Category</label>
@@ -192,7 +192,7 @@ function ExpenseIncomeInstance({ id, onSave, onDismiss, showVertically }) {
                 name="categoryId"
                 id="categoryId"
                 onChange={(e) => onChange(e.target.name, e.target.value)}
-                value={model['categoryId']}
+                value={model["categoryId"]}
               >
                 <option value="" defaultValue>
                   Select
@@ -203,12 +203,12 @@ function ExpenseIncomeInstance({ id, onSave, onDismiss, showVertically }) {
                   </option>
                 ))}
               </select>
-              <small>{errors['categoryId']}</small>
+              <small>{errors["categoryId"]}</small>
             </div>
 
             <div
-              className={classNames('form-group', 'w200', {
-                error: errors['amount'],
+              className={classNames("form-group", "w200", {
+                error: errors["amount"],
               })}
             >
               <label htmlFor="amount">Amount</label>
@@ -217,14 +217,14 @@ function ExpenseIncomeInstance({ id, onSave, onDismiss, showVertically }) {
                 name="amount"
                 id="amount"
                 onChange={(e) => onChange(e.target.name, e.target.value)}
-                value={model['amount']}
+                value={model["amount"]}
                 placeholder="999.99"
               />
-              <small>{errors['amount']}</small>
+              <small>{errors["amount"]}</small>
             </div>
 
             <div
-              className={classNames('form-group', { error: errors['history'] })}
+              className={classNames("form-group", { error: errors["history"] })}
             >
               <label htmlFor="history">History</label>
               <textarea
@@ -232,16 +232,16 @@ function ExpenseIncomeInstance({ id, onSave, onDismiss, showVertically }) {
                 name="history"
                 id="history"
                 onChange={(e) => onChange(e.target.name, e.target.value)}
-                value={model['history']}
+                value={model["history"]}
               />
-              <small>{errors['history']}</small>
+              <small>{errors["history"]}</small>
             </div>
           </div>
           <div
-            className={classNames('padding flex flex-column', {
-              'border-top': showVertically,
-              'border-left': !showVertically,
-              'w400 ': !showVertically,
+            className={classNames("padding flex flex-column", {
+              "border-top": showVertically,
+              "border-left": !showVertically,
+              "w400 ": !showVertically,
             })}
           >
             <div className="titlebar">
@@ -249,21 +249,21 @@ function ExpenseIncomeInstance({ id, onSave, onDismiss, showVertically }) {
             </div>
 
             <div
-              className={classNames('form-group', {
-                error: errors['bankAccountId'],
+              className={classNames("form-group", {
+                error: errors["bankAccountId"],
               })}
             >
               <BankAccountCombo
                 label="Account"
                 value={model.bankAccountId}
-                errorObject={errors['bankAccountId']}
-                onChange={(id) => onChangePayment('bankAccountId', id)}
+                errorObject={errors["bankAccountId"]}
+                onChange={(id) => onChangePayment("bankAccountId", id)}
               />
             </div>
 
             <div
-              className={classNames('form-group', {
-                error: errors['paymentDate'],
+              className={classNames("form-group", {
+                error: errors["paymentDate"],
               })}
             >
               <label htmlFor="paymentType">Payment Date</label>
@@ -272,17 +272,17 @@ function ExpenseIncomeInstance({ id, onSave, onDismiss, showVertically }) {
                 name="paymentDate"
                 id="paymentDate"
                 onChange={(e) => onChangePayment(e.target.name, e.target.value)}
-                value={model['paymentDate']}
+                value={model["paymentDate"]}
                 placeholder="dd/MM/yyyy"
               />
-              <small>{errors['dueDate']}</small>
+              <small>{errors["dueDate"]}</small>
             </div>
 
             <div className="flex flex-1 flex-row">
               <div className="flex flex-1 flex-column">
                 <div
-                  className={classNames('form-group', 'margin-left', {
-                    error: errors['paidAmount'],
+                  className={classNames("form-group", "margin-left", {
+                    error: errors["paidAmount"],
                   })}
                 >
                   <label htmlFor="paidAmount">paidAmount</label>
@@ -293,16 +293,16 @@ function ExpenseIncomeInstance({ id, onSave, onDismiss, showVertically }) {
                     onChange={(e) =>
                       onChangePayment(e.target.name, e.target.value)
                     }
-                    value={model['paidAmount']}
+                    value={model["paidAmount"]}
                     placeholder="999.99"
                   />
-                  <small>{errors['paidAmount']}</small>
+                  <small>{errors["paidAmount"]}</small>
                 </div>
               </div>
               <div className="flex flex-1 flex-column">
                 <div
-                  className={classNames('form-group', 'margin-left', {
-                    error: errors['feesAndInterest'],
+                  className={classNames("form-group", "margin-left", {
+                    error: errors["feesAndInterest"],
                   })}
                 >
                   <label htmlFor="feesAndInterest">Fees and Interest</label>
@@ -313,10 +313,10 @@ function ExpenseIncomeInstance({ id, onSave, onDismiss, showVertically }) {
                     onChange={(e) =>
                       onChangePayment(e.target.name, e.target.value)
                     }
-                    value={model['feesAndInterest']}
+                    value={model["feesAndInterest"]}
                     placeholder="999.99"
                   />
-                  <small>{errors['feesAndInterest']}</small>
+                  <small>{errors["feesAndInterest"]}</small>
                 </div>
               </div>
             </div>

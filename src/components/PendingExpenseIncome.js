@@ -1,13 +1,13 @@
-import React from 'react';
-import ExpenseIncomeService from '../services/ExpenseIncomeService';
-import { NumberHelper, StringHelper } from '../Helpers';
-import classNames from 'classnames';
-import LoaderAndEmptyWrapper from './LoaderAndEmptyWrapper';
+import React from "react";
+import { ExpenseIncomeService } from "../services/ExpenseIncomeService";
+import { NumberHelper, StringHelper } from "../Helpers";
+import classNames from "classnames";
+import LoaderAndEmptyWrapper from "./LoaderAndEmptyWrapper";
 import {
   DashboardActions,
   useDashboardContext,
-} from '../store/DashBoardStateContext';
-import { GlobalActions, useGlobalState } from '../store/GlobalStateContext';
+} from "../store/DashBoardStateContext";
+import { GlobalActions, useGlobalState } from "../store/GlobalStateContext";
 
 function PendingExpenseIncome() {
   const [{ expenseIncomeList, expenseIncomeSumIsLoading }, dispatch] =
@@ -41,14 +41,14 @@ function PendingExpenseIncome() {
         </thead>
         <tbody>
           {expenseIncomeList
-            .filter((item) => item.status === 'PENDING')
+            .filter((item) => item.status === "PENDING")
             .map((item) => (
               <tr
                 key={item.id}
                 className={classNames({
-                  income: item.paymentType === 'INCOME',
-                  outcome: item.paymentType === 'EXPENSE',
-                  italic: item.status === 'PAID',
+                  income: item.paymentType === "INCOME",
+                  outcome: item.paymentType === "EXPENSE",
+                  italic: item.status === "PAID",
                   bold: item.overdue,
                 })}
               >

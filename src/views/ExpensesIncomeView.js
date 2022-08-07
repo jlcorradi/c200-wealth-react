@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import ExpenseIncomeCollection from '../components/ExpenseIncomeCollection';
-import ExpenseIncomeInstance from '../components/ExpenseIncomeInstance';
-import GlobalFilter from '../components/GlobalFilter';
-import ExpenseIncomeService from '../services/ExpenseIncomeService';
+import React, { useEffect, useState } from "react";
+import ExpenseIncomeCollection from "../components/ExpenseIncomeCollection";
+import ExpenseIncomeInstance from "../components/ExpenseIncomeInstance";
+import GlobalFilter from "../components/GlobalFilter";
+import { ExpenseIncomeService } from "../services/ExpenseIncomeService";
 import {
   DashboardActions,
   useDashboardContext,
-} from '../store/DashBoardStateContext';
+} from "../store/DashBoardStateContext";
 import {
   ExpenseIncomeActions,
   useExpenseIncomeStateContext,
-} from '../store/ExpenseIncomeStateContext';
-import Modal from '../template/Modal';
+} from "../store/ExpenseIncomeStateContext";
+import Modal from "../template/Modal";
 
 function ExpensesIncomeView() {
   const [{ loadingPending, page, filter, order }, dispatch] =

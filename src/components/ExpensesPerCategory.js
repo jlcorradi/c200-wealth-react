@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import moment from 'moment';
-import ExpenseIncomeService from '../services/ExpenseIncomeService';
-import ChartOptions from '../ChartOptions';
-import Chart from 'react-apexcharts';
-import LoaderAndEmptyWrapper from './LoaderAndEmptyWrapper';
+import React, { useEffect, useState } from "react";
+import moment from "moment";
+import { ExpenseIncomeService } from "../services/ExpenseIncomeService";
+import ChartOptions from "../ChartOptions";
+import Chart from "react-apexcharts";
+import LoaderAndEmptyWrapper from "./LoaderAndEmptyWrapper";
 
 function ExpensesPerCategory() {
   useEffect(loadData, []);
@@ -13,13 +13,13 @@ function ExpensesPerCategory() {
   function loadData() {
     setLoading(true);
     let filter = {
-      dateIni: moment().startOf('month').format('DD/MM/YYYY'),
-      dateEnd: moment().endOf('month').format('DD/MM/YYYY'),
-      paymentType: 'EXPENSE',
+      dateIni: moment().startOf("month").format("DD/MM/YYYY"),
+      dateEnd: moment().endOf("month").format("DD/MM/YYYY"),
+      paymentType: "EXPENSE",
       pageSize: 20000,
     };
 
-    ExpenseIncomeService.query(0, filter, 'category.description(ASC)')
+    ExpenseIncomeService.query(0, filter, "category.description(ASC)")
       .then((response) => {
         var result = [];
         response.data.content.reduce(function (res, value) {
