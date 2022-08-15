@@ -9,7 +9,7 @@ import {
   ruleRunner,
   runValidations,
 } from "../Validatoion";
-import BankAccountCombo from "./BankAccountCombo";
+import { BankAccountCombo } from "./BankAccountCombo";
 import LoaderAndEmptyWrapper from "./LoaderAndEmptyWrapper";
 
 const EMPTY_MODEL = {

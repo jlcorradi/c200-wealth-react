@@ -8,7 +8,7 @@ import LoaderAndEmptyWrapper from "./LoaderAndEmptyWrapper";
 import { GlobalActions, useGlobalState } from "../store/GlobalStateContext";
 import { useDashboardContext } from "../store/DashBoardStateContext";
 import {
-  ExpenseIncome,
+  ExpenseIncomeEntity,
   PaymentStatus,
   PaymentType,
 } from "../types/expense-income";
@@ -19,7 +19,7 @@ function PendingExpenseIncome() {
 
   const [, globalDispatch] = useGlobalState();
 
-  function markPaid(item: ExpenseIncome) {
+  function markPaid(item: ExpenseIncomeEntity) {
     ExpenseIncomeService.quickPay(item.id).then(() => actions.markToReload());
   }
 
@@ -43,8 +43,8 @@ function PendingExpenseIncome() {
         </thead>
         <tbody>
           {pendingExpensesIncomeList
-            .filter((item: ExpenseIncome) => item.status === "PENDING")
-            .map((item: ExpenseIncome) => (
+            .filter((item: ExpenseIncomeEntity) => item.status === "PENDING")
+            .map((item: ExpenseIncomeEntity) => (
               <tr
                 key={item.id}
                 className={classNames({

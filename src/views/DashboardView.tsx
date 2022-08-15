@@ -14,7 +14,7 @@ import LoaderAndEmptyWrapper from "../components/LoaderAndEmptyWrapper";
 import { Indicator } from "../components/Indicator";
 //@ts-ignore
 import { useDashboardContext } from "../store/DashBoardStateContext";
-import { ExpenseIncome, PaymentType } from "../types/expense-income";
+import { ExpenseIncomeEntity, PaymentType } from "../types/expense-income";
 import { ExpenseIncomeSummaryItem } from "../services/DashboardService";
 
 export const DashboardView: React.FC<{}> = () => {
