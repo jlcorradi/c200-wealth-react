@@ -7,7 +7,11 @@ import LoaderAndEmptyWrapper from "./LoaderAndEmptyWrapper";
 // @ts-ignore
 import { GlobalActions, useGlobalState } from "../store/GlobalStateContext";
 import { useDashboardContext } from "../store/DashBoardStateContext";
-import { IExpenseIncome } from "../types/expense-income";
+import {
+  ExpenseIncome,
+  PaymentStatus,
+  PaymentType,
+} from "../types/expense-income";
 
 function PendingExpenseIncome() {
   const { state, actions } = useDashboardContext();
@@ -15,7 +19,7 @@ function PendingExpenseIncome() {
 
   const [, globalDispatch] = useGlobalState();
 
-  function markPaid(item: IExpenseIncome) {
+  function markPaid(item: ExpenseIncome) {
     ExpenseIncomeService.quickPay(item.id).then(() => actions.markToReload());
   }
 
@@ -39,14 +43,14 @@ function PendingExpenseIncome() {
         </thead>
         <tbody>
           {pendingExpensesIncomeList
-            .filter((item: IExpenseIncome) => item.status === "PENDING")
-            .map((item: IExpenseIncome) => (
+            .filter((item: ExpenseIncome) => item.status === "PENDING")
+            .map((item: ExpenseIncome) => (
               <tr
                 key={item.id}
                 className={classNames({
-                  income: item.paymentType === "INCOME",
-                  outcome: item.paymentType === "EXPENSE",
-                  italic: item.status === "PAID",
+                  income: item.paymentType === PaymentType.Income,
+                  outcome: item.paymentType === PaymentType.Expense,
+                  italic: item.status === PaymentStatus.Paid,
                   bold: item.overdue,
                 })}
               >
