@@ -3,13 +3,10 @@ import React, { useEffect, useState } from "react";
 import BankAccountService from "../services/BankAccountServices";
 import DividendYieldService from "../services/DividendYieldService";
 import {
-  DashboardActions,
-  useDashboardContext,
-} from "../store/DashBoardStateContext";
-import {
   DividendYieldActions,
   useDividendYieldStateContext,
 } from "../store/DividendYieldStateContext";
+import { useDashboardContext } from "../store/DashBoardStateContext";
 import {
   load as loadPortfolio,
   usePortfolioStateContext,
@@ -42,7 +39,7 @@ const EMPTY_MODEL = {
 function DividendYieldInstance({ visible, onDismiss }) {
   const [, dispatchDYEvent] = useDividendYieldStateContext();
   const { state, dispatchPortfolioEvent } = usePortfolioStateContext();
-  const [, dashboardDispatch] = useDashboardContext();
+  const { actions: dashboardActions } = useDashboardContext();
 
   const [model, seetModel] = useState(EMPTY_MODEL);
   const [errors, setErrors] = useState({});
@@ -64,7 +61,7 @@ function DividendYieldInstance({ visible, onDismiss }) {
       DividendYieldService.create(model).then(() => {
         dispatchDYEvent(DividendYieldActions.setToLoad());
         dispatchPortfolioEvent(loadPortfolio());
-        dashboardDispatch(DashboardActions.loadExpenseIncomeSum());
+        dashboardActions.markToReload();
         setSubmitted(false);
         seetModel({
           ...EMPTY_MODEL,

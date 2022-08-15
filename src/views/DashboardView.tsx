@@ -3,32 +3,28 @@ import React from "react";
 import ExpensesPerCategory from "../components/ExpensesPerCategory";
 // @ts-ignore
 import PendingExpenseIncome from "../components/PendingExpenseIncome";
-import { NumberHelper } from "../Helpers";
+import { ArrayHelper, NumberHelper } from "../Helpers";
 // @ts-ignore
 import { useGlobalState } from "../store/GlobalStateContext";
 // @ts-ignore
 import NotificationWidget from "../components/NotificationWidget";
-// @ts-ignore
-import {
-  DashboardActions,
-  useDashboardContext,
-  //@ts-ignore
-} from "../store/DashBoardStateContext";
 import ReactApexChart from "react-apexcharts";
 // @ts-ignore
 import LoaderAndEmptyWrapper from "../components/LoaderAndEmptyWrapper";
 import { Indicator } from "../components/Indicator";
+//@ts-ignore
+import { useDashboardContext } from "../store/DashBoardStateContext";
+import { IExpenseIncome, PaymentType } from "../types/expense-income";
+import { ExpenseIncomeSummaryItem } from "../services/DashboardService";
 
 export const DashboardView: React.FC<{}> = () => {
-  const [{ monthlyExpenseIncomeSummary, expenseIncomeSum }, dispatch] =
-    useDashboardContext();
+  const dashboardCtx = useDashboardContext();
 
   const [{ notifications }] = useGlobalState();
+  const { pendingExpenses, pendingIncome, totalExpenses, totalIncome } =
+    dashboardCtx.state.expenseIncomeSum;
 
-  React.useEffect(() => {
-    dispatch(DashboardActions.loadExpenseIncomeSum());
-    dispatch(DashboardActions.loadMonthlyExpenseIncomeSummary());
-  }, []);
+  const { monthlyExpenseIncomeSummary } = dashboardCtx.state;
 
   return (
     <>
@@ -40,23 +36,23 @@ export const DashboardView: React.FC<{}> = () => {
         <Indicator
           label="Pending Expenses"
           color="danger"
-          value={NumberHelper.formatBRL(expenseIncomeSum["pendingExpenses"])}
+          value={NumberHelper.formatBRL(pendingExpenses ?? 0)}
           icon="bx-archive-out"
         />
         <Indicator
           label="Total Expenses"
           color="danger"
-          value={NumberHelper.formatBRL(expenseIncomeSum["totalExpenses"])}
+          value={NumberHelper.formatBRL(totalExpenses ?? 0)}
           icon="bxs-archive-out"
         />
         <Indicator
           label="Pending Income"
-          value={NumberHelper.formatBRL(expenseIncomeSum["pendingIncome"])}
+          value={NumberHelper.formatBRL(pendingIncome ?? 0)}
           icon="bx-archive-in"
         />
         <Indicator
           label="Total Income"
-          value={NumberHelper.formatBRL(expenseIncomeSum["totalIncome"])}
+          value={NumberHelper.formatBRL(totalIncome ?? 0)}
           icon="bxs-archive-in"
         />
       </div>
@@ -87,10 +83,10 @@ export const DashboardView: React.FC<{}> = () => {
         <div className="flex flex-row margin-v">
           <div className="flex flex-column padding flex-1">
             <LoaderAndEmptyWrapper
-              isLoading={monthlyExpenseIncomeSummary.isLoading}
+              isLoading={dashboardCtx.state.isLoading}
               isEmpty={
-                monthlyExpenseIncomeSummary.expenses === 0 &&
-                monthlyExpenseIncomeSummary.incomes === 0
+                dashboardCtx.state.expenseIncomeSum.pendingExpensesIncomeList
+                  ?.length === 0
               }
               loadingMessage="Loading Expenses Evolution Chart"
             >
@@ -104,20 +100,20 @@ export const DashboardView: React.FC<{}> = () => {
                 series={[
                   {
                     name: "Expenses",
-                    data: monthlyExpenseIncomeSummary.expenses.map(
-                      (i: any) => i.amount
+                    data: monthlyExpenseIncomeSummary.map(
+                      (i: ExpenseIncomeSummaryItem) => i.expenseAmount
                     ),
                   },
                   {
                     name: "Incomes",
-                    data: monthlyExpenseIncomeSummary.incomes.map(
-                      (i: any) => i.amount
+                    data: monthlyExpenseIncomeSummary.map(
+                      (i: ExpenseIncomeSummaryItem) => i.incomeAmount
                     ),
                   },
                 ]}
                 options={{
-                  labels: monthlyExpenseIncomeSummary.expenses.map(
-                    (i: any) => i.month
+                  labels: monthlyExpenseIncomeSummary.map(
+                    (i: ExpenseIncomeSummaryItem) => i.month
                   ),
                   dataLabels: { enabled: false },
                   xaxis: {

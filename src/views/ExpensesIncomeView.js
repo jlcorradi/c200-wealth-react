@@ -3,10 +3,7 @@ import ExpenseIncomeCollection from "../components/ExpenseIncomeCollection";
 import ExpenseIncomeInstance from "../components/ExpenseIncomeInstance";
 import GlobalFilter from "../components/GlobalFilter";
 import { ExpenseIncomeService } from "../services/ExpenseIncomeService";
-import {
-  DashboardActions,
-  useDashboardContext,
-} from "../store/DashBoardStateContext";
+import { useDashboardContext } from "../store/DashBoardStateContext";
 import {
   ExpenseIncomeActions,
   useExpenseIncomeStateContext,
@@ -18,7 +15,7 @@ function ExpensesIncomeView() {
     useExpenseIncomeStateContext();
   const [showingInstance, setShowingInstance] = useState(false);
   const [idToUpdate, setIdToUpdate] = useState(null);
-  const [_, dashboardDispatch] = useDashboardContext();
+  const { actions: DashboardActions } = useDashboardContext();
 
   const [filterVisible, setFilterVisible] = useState(false);
 
@@ -32,7 +29,7 @@ function ExpensesIncomeView() {
 
   function reload() {
     dispatch(ExpenseIncomeActions.setToLoad());
-    dashboardDispatch(DashboardActions.loadExpenseIncomeSum());
+    DashboardActions.markToReload();
   }
 
   return (
@@ -83,7 +80,7 @@ function ExpensesIncomeView() {
           onDismiss={() => setShowingInstance(false)}
           onSave={(e) => {
             dispatch(ExpenseIncomeActions.setToLoad());
-            dashboardDispatch(DashboardActions.loadExpenseIncomeSum());
+            DashboardActions.markToReload();
           }}
         />
       </Modal>

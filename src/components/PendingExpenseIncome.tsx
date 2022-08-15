@@ -2,31 +2,29 @@ import React from "react";
 import { ExpenseIncomeService } from "../services/ExpenseIncomeService";
 import { NumberHelper, StringHelper } from "../Helpers";
 import classNames from "classnames";
+// @ts-ignore
 import LoaderAndEmptyWrapper from "./LoaderAndEmptyWrapper";
-import {
-  DashboardActions,
-  useDashboardContext,
-} from "../store/DashBoardStateContext";
+// @ts-ignore
 import { GlobalActions, useGlobalState } from "../store/GlobalStateContext";
+import { useDashboardContext } from "../store/DashBoardStateContext";
+import { IExpenseIncome } from "../types/expense-income";
 
 function PendingExpenseIncome() {
-  const [{ expenseIncomeList, expenseIncomeSumIsLoading }, dispatch] =
-    useDashboardContext();
+  const { state, actions } = useDashboardContext();
+  const { pendingExpensesIncomeList } = state.expenseIncomeSum;
 
   const [, globalDispatch] = useGlobalState();
 
-  function markPaid(item) {
-    ExpenseIncomeService.quickPay(item.id).then(() =>
-      dispatch(DashboardActions.loadExpenseIncomeSum())
-    );
+  function markPaid(item: IExpenseIncome) {
+    ExpenseIncomeService.quickPay(item.id).then(() => actions.markToReload());
   }
 
   return (
     <LoaderAndEmptyWrapper
       loadingMessage="Loading Pending Income/Expenses"
       emptyIcon="happy"
-      isLoading={expenseIncomeSumIsLoading}
-      isEmpty={expenseIncomeList.length === 0}
+      isLoading={state.isLoading}
+      isEmpty={pendingExpensesIncomeList?.length === 0}
     >
       <table className="data-table">
         <thead>
@@ -40,9 +38,9 @@ function PendingExpenseIncome() {
           </tr>
         </thead>
         <tbody>
-          {expenseIncomeList
-            .filter((item) => item.status === "PENDING")
-            .map((item) => (
+          {pendingExpensesIncomeList
+            .filter((item: IExpenseIncome) => item.status === "PENDING")
+            .map((item: IExpenseIncome) => (
               <tr
                 key={item.id}
                 className={classNames({
@@ -82,7 +80,6 @@ function PendingExpenseIncome() {
                 </th>
               </tr>
             ))}
-          <tr></tr>
         </tbody>
       </table>
     </LoaderAndEmptyWrapper>
