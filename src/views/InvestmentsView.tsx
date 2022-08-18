@@ -204,7 +204,6 @@ function InvestmentsView() {
 
       <OffCanva
         visible={portfolioItemVisible}
-        item={portfolioItemToShow}
         onDismiss={() => setPortfolioItemVisible(false)}
       >
         <PortfolioItem item={portfolioItemToShow} />

@@ -1,37 +1,44 @@
-import classNames from 'classnames';
-import React, { useState, useEffect } from 'react';
-import { NotificationManager } from 'react-notifications';
-import { http } from '../Http';
-import LoadingComponent from '../template/LoadingComponent';
+import classNames from "classnames";
+import React, { useState, useEffect, FC, SyntheticEvent } from "react";
+//@ts-ignore
+import { NotificationManager } from "react-notifications";
+import { http } from "../Http";
+import LoadingComponent from "../template/LoadingComponent";
+import { BankAccountEntity } from "../types/bank-account";
+
 import {
   hasErrors,
   required,
   ruleRunner,
   runValidations,
-} from '../Validatoion';
+} from "../Validatoion";
 
-function BankAccountInstance({ onUpdate, id }) {
+export const BankAccountInstance: FC<{
+  id: string;
+  onUpdate: (account: BankAccountEntity) => void;
+}> = ({ onUpdate, id }) => {
   let validationRules = [
-    ruleRunner('number', 'Account Number', required),
-    ruleRunner('description', 'Description', required),
-    ruleRunner('type', 'Account Type', required),
+    ruleRunner("number", "Account Number", required),
+    ruleRunner("description", "Description", required),
+    ruleRunner("type", "Account Type", required),
   ];
 
-  const EMPTY_ACCOUNT = {
+  const EMPTY_ACCOUNT: BankAccountEntity = {
+    id: undefined,
     active: true,
-    number: '',
-    description: '',
-    type: '',
+    number: "",
+    description: "",
+    type: "INVESTMENT",
   };
 
-  let [errors, setErrors] = useState({});
+  let [errors, setErrors] = useState<any>({});
   let [submitted, setSubmitted] = useState(false);
   let [loading, setLoading] = useState(false);
 
-  let [account, setAccount] = useState(EMPTY_ACCOUNT);
+  let [account, setAccount] = useState<BankAccountEntity>(EMPTY_ACCOUNT);
 
   function isUpdating() {
-    return id && id !== 'new';
+    return id && id !== "new";
   }
 
   useEffect(() => {
@@ -50,10 +57,13 @@ function BankAccountInstance({ onUpdate, id }) {
     }
   }, [id]);
 
-  function submitForm(e) {
+  function submitForm(e: SyntheticEvent) {
     e.preventDefault();
     setSubmitted(true);
-    let preSubmittedErros = runValidations(account, validationRules);
+    let preSubmittedErros = runValidations<BankAccountEntity>(
+      account,
+      validationRules
+    );
     setErrors(preSubmittedErros);
 
     if (!hasErrors(preSubmittedErros)) {
@@ -73,25 +83,25 @@ function BankAccountInstance({ onUpdate, id }) {
       }
     } else {
       NotificationManager.warning(
-        'Please, verify validation errors and try again.'
+        "Please, verify validation errors and try again."
       );
     }
   }
 
-  function onChange(field, value) {
-    let toUpdate = Object.assign({}, account);
-    toUpdate[field] = value;
+  function onChange(field: string, value: any) {
+    let toUpdate: BankAccountEntity = Object.assign({}, account);
+    (toUpdate as any)[field] = value;
     setAccount(toUpdate);
     setErrors(runValidations(toUpdate, validationRules));
   }
 
   return (
     <>
-      {loading && <LoadingComponent isLoading={loading} />}
+      {loading && <LoadingComponent />}
       {!loading && (
         <form
           onSubmit={submitForm}
-          className={classNames('padding', {
+          className={classNames("padding", {
             submitted: submitted,
             error: hasErrors(errors),
           })}
@@ -103,12 +113,12 @@ function BankAccountInstance({ onUpdate, id }) {
               type="checkbox"
               name="active"
               checked={account.active}
-              readonly={isUpdating()}
-              onChange={(e) => onChange('active', e.target.checked)}
+              data-readonly={isUpdating()}
+              onChange={(e) => onChange("active", e.target.checked)}
             />
           </div>
           <div
-            className={classNames('form-group', { error: errors['number'] })}
+            className={classNames("form-group", { error: errors["number"] })}
           >
             <label htmlFor="id">Account Number</label>
             <input
@@ -118,9 +128,9 @@ function BankAccountInstance({ onUpdate, id }) {
               value={account.number}
               onChange={(e) => onChange(e.target.name, e.target.value)}
             />
-            {errors['number'] && <small>{errors['number']}</small>}
+            {errors["number"] && <small>{errors["number"]}</small>}
           </div>
-          <div className={classNames('form-group', { error: errors['type'] })}>
+          <div className={classNames("form-group", { error: errors["type"] })}>
             <label htmlFor="type">Account Type</label>
             <select
               name="type"
@@ -135,11 +145,11 @@ function BankAccountInstance({ onUpdate, id }) {
               <option value="INVESTMENT">Investments Account</option>
               <option value="CHECKING">Checking Account</option>
             </select>
-            {errors['type'] && <small>{errors['type']}</small>}
+            {errors["type"] && <small>{errors["type"]}</small>}
           </div>
           <div
-            className={classNames('form-group', {
-              error: errors['description'],
+            className={classNames("form-group", {
+              error: errors["description"],
             })}
           >
             <label htmlFor="id">Description</label>
@@ -150,11 +160,11 @@ function BankAccountInstance({ onUpdate, id }) {
               value={account.description}
               onChange={(e) => onChange(e.target.name, e.target.value)}
             />
-            {errors['description'] && <small>{errors['description']}</small>}
+            {errors["description"] && <small>{errors["description"]}</small>}
           </div>
           <div
-            className={classNames('form-group', {
-              error: errors['description'],
+            className={classNames("form-group", {
+              error: errors["description"],
             })}
           >
             <label htmlFor="id">Description</label>
@@ -165,10 +175,10 @@ function BankAccountInstance({ onUpdate, id }) {
               value={account.relatedDescriptions}
               onChange={(e) => onChange(e.target.name, e.target.value)}
             />
-            {errors['description'] && <small>{errors['description']}</small>}
+            {errors["description"] && <small>{errors["description"]}</small>}
           </div>
 
-          <div className="buttons padding-v" disabled={loading}>
+          <div className="buttons padding-v" data-disabled={loading}>
             <input
               type="submit"
               className="button button-primary"
@@ -179,6 +189,4 @@ function BankAccountInstance({ onUpdate, id }) {
       )}
     </>
   );
-}
-
-export default BankAccountInstance;
+};

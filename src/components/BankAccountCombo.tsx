@@ -12,8 +12,13 @@ export const BankAccountCombo: React.FC<{
     []
   );
 
+  async function loadList() {
+    const list = await BankAccountService.list();
+    setBankAccountList(list);
+  }
+
   React.useEffect(() => {
-    BankAccountService.list().then(({ data }) => setBankAccountList(data));
+    loadList();
   }, []);
 
   return (

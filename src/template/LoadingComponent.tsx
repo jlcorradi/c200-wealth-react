@@ -1,8 +1,8 @@
 import React from "react";
 
-const LoadingComponent: React.FC<{ loadingMessage: string }> = ({
-  loadingMessage,
-}) => {
+const LoadingComponent: React.FC<{
+  loadingMessage?: string;
+}> = ({ loadingMessage }) => {
   return (
     <div
       className="empty-container flex flex-column flex-1 justify-content-center align-items-center"

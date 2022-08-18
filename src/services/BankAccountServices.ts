@@ -10,8 +10,9 @@ const BankAccountService = {
   getCheckingAccounts: () => {
     return http.get<Array<BankAccountEntity>>(`${ENDPOINT}?type=CHECKING`);
   },
-  list: () => {
-    return http.get<Array<BankAccountEntity>>(`${ENDPOINT}`);
+  list: async () => {
+    const { data } = await http.get<Array<BankAccountEntity>>(`${ENDPOINT}`);
+    return data;
   },
   setDefaultPaier: (id: string) =>
     http.put(`${ENDPOINT}/${id}/default_payment_account`),

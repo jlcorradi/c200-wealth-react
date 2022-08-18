@@ -10,7 +10,7 @@ import {
   NavLink,
 } from 'react-router-dom';
 import DashboardView from '../views/DashboardView';
-import BankAccountsView from '../views/BankAccountsView';
+import {BankAccountsView} from '../views/BankAccountsView';
 import ExpensesIncomeView from '../views/ExpensesIncomeView';
 import RecurringExpenseIncomeView from '../views/RecurringExpenseIncomeView';
 import InvestmentsView from '../views/InvestmentsView';

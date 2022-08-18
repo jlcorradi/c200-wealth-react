@@ -1,10 +1,15 @@
-import classNames from 'classnames';
-import React from 'react';
+import classNames from "classnames";
+import React, { ReactNode } from "react";
 
-function OffCanva({ onDismiss, visible, children, tittle }) {
+export const OffCanva: React.FC<{
+  onDismiss: () => void;
+  visible: Boolean;
+  children: ReactNode;
+  tittle?: string;
+}> = ({ onDismiss, visible, children, tittle }) => {
   return (
     <div
-      className={classNames('offcanva', 'shadow', 'border-left', {
+      className={classNames("offcanva", "shadow", "border-left", {
         visible: visible,
       })}
     >
@@ -16,6 +21,6 @@ function OffCanva({ onDismiss, visible, children, tittle }) {
       {children}
     </div>
   );
-}
+};
 
 export default OffCanva;
