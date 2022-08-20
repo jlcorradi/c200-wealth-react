@@ -1,32 +1,47 @@
-import React, { useEffect, useState } from "react";
+import React, { FC, SyntheticEvent, useEffect, useState } from "react";
 import BankAccountService from "../services/BankAccountServices";
 import KeyValuePairService from "../services/KeyValuePairService";
 import OffCanva from "../template/OffCanva";
+import { BankAccountEntity } from "../types/bank-account";
+import { KeyValuePair } from "../types/key-value-pair";
 
-function GlobalFilter({
+export const GlobalFilter: FC<{
+  filter: any;
+  supportedFields: string;
+  visible: boolean;
+  onChange: (newFilter: any) => void;
+  onDismiss: () => void;
+}> = ({
   filter,
   supportedFields,
   visible,
   onChange: onChangeFilter,
   onDismiss,
-}) {
+}) => {
   const supportedFieldList = supportedFields.split(",");
-  const [model, setModel] = useState({});
+  const [model, setModel] = useState<any>({});
 
-  const [accountList, setAccountList] = useState([]);
-  const [expenseIncomeCategoryList, setExpenseIncomeCategoryList] = useState(
-    []
-  );
+  const [accountList, setAccountList] = useState<BankAccountEntity[]>([]);
+  const [expenseIncomeCategoryList, setExpenseIncomeCategoryList] = useState<
+    KeyValuePair[]
+  >([]);
+
+  async function loadBankAccounts() {
+    try {
+      const list = await BankAccountService.list();
+      setAccountList(list);
+    } catch (e) {}
+  }
 
   useEffect(() => {
-    BankAccountService.list().then((response) => setAccountList(response.data));
+    loadBankAccounts();
     KeyValuePairService.listExpenseIncomeCategories().then((response) =>
       setExpenseIncomeCategoryList(response.data)
     );
     setModel({ ...filter });
   }, []);
 
-  function onSubmit(e) {
+  function onSubmit(e: SyntheticEvent) {
     e.preventDefault();
     if (JSON.stringify(filter) !== JSON.stringify(model)) {
       onChangeFilter(model);
@@ -39,7 +54,7 @@ function GlobalFilter({
     }
   }
 
-  function onChange(field, value) {
+  function onChange(field: string, value: string) {
     let newModel = Object.assign({}, model);
     if (!value) {
       delete newModel[field];
@@ -49,7 +64,7 @@ function GlobalFilter({
     setModel(newModel);
   }
 
-  function isSupported(field) {
+  function isSupported(field: string) {
     return supportedFieldList.includes(field);
   }
 
@@ -68,12 +83,11 @@ function GlobalFilter({
             <div className="form-group padding">
               <label htmlFor="bankAccountId">Account</label>
               <select
-                type="text"
                 name="bankAccountId"
                 value={model.bankAccountId}
                 onChange={(e) => onChange(e.target.name, e.target.value)}
               >
-                <option value="" defaultValue>
+                <option value="" data-defaultValue>
                   Select
                 </option>
                 {accountList.map((a) => (
@@ -126,12 +140,11 @@ function GlobalFilter({
             <div className="form-group padding">
               <label htmlFor="stockOperationType">Operation</label>
               <select
-                type="text"
                 name="stockOperationType"
                 value={model.stockOperationType}
                 onChange={(e) => onChange(e.target.name, e.target.value)}
               >
-                <option value="" defaultValue>
+                <option value="" data-defaultValue>
                   Select
                 </option>
                 <option value="PURCHASE">Purchase</option>
@@ -144,12 +157,11 @@ function GlobalFilter({
             <div className="form-group padding">
               <label htmlFor="paymentType">Type</label>
               <select
-                type="text"
                 name="paymentType"
                 value={model.paymentType}
                 onChange={(e) => onChange(e.target.name, e.target.value)}
               >
-                <option value="" defaultValue>
+                <option value="" data-defaultValue>
                   Select
                 </option>
                 <option value="EXPENSE">Expense</option>
@@ -162,12 +174,11 @@ function GlobalFilter({
             <div className="form-group padding">
               <label htmlFor="expenseIncomeStatus">Status</label>
               <select
-                type="text"
                 name="expenseIncomeStatus"
                 value={model.expenseIncomeStatus}
                 onChange={(e) => onChange(e.target.name, e.target.value)}
               >
-                <option value="" defaultValue>
+                <option value="" data-defaultValue>
                   Select
                 </option>
                 <option value="PENDING">Pending</option>
@@ -181,12 +192,11 @@ function GlobalFilter({
             <div className="form-group padding">
               <label htmlFor="expenseIncomeCategoryId">Category</label>
               <select
-                type="text"
                 name="expenseIncomeCategoryId"
                 value={model.expenseIncomeCategoryId}
                 onChange={(e) => onChange(e.target.name, e.target.value)}
               >
-                <option value="" defaultValue>
+                <option value="" data-defaultValue>
                   Select
                 </option>
                 {expenseIncomeCategoryList.map((item) => (
@@ -220,6 +230,6 @@ function GlobalFilter({
       </form>
     </OffCanva>
   );
-}
+};
 
 export default GlobalFilter;

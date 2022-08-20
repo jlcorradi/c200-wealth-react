@@ -1,9 +1,9 @@
-import classNames from 'classnames';
-import React from 'react';
-import { NumberHelper } from '../Helpers';
-import LoadMoreButton from './LoadMoreButton';
-import OrderToggle from './OrderToggle';
-import Popup from './Popup';
+import classNames from "classnames";
+import React from "react";
+import { NumberHelper } from "../Helpers";
+import LoadMoreButton from "./LoadMoreButton";
+import { OrderToggle } from "./OrderToggle";
+import { Popup } from "./Popup";
 
 // let config = {
 //   fields: [
@@ -44,9 +44,9 @@ function CrudTable({
   function formatField(item, field) {
     let value = item[field.field];
     switch (field.format) {
-      case 'brl':
+      case "brl":
         return NumberHelper.formatBRL(value);
-      case 'percent':
+      case "percent":
         return NumberHelper.formatPercent(value);
       default:
         return value;
@@ -68,15 +68,15 @@ function CrudTable({
         fieldLabel
       );
 
-    let className = field.className ? field.className : 'text-left';
+    let className = field.className ? field.className : "text-left";
 
     let [filterVisible, setFilterVisible] = React.useState(false);
 
     let filterIcon = field.allowFilter && onChangeFilter && (
-      <span style={{ position: 'relative' }}>
+      <span style={{ position: "relative" }}>
         <i
           onClick={() => setFilterVisible(!filterVisible)}
-          className={classNames('button-icon bx bx-filter', {
+          className={classNames("button-icon bx bx-filter", {
             active: filter[functionalField],
           })}
         ></i>
@@ -112,7 +112,7 @@ function CrudTable({
   };
 
   const Row = ({ item }) => {
-    let rowClass = config.getRowCssClass ? config.getRowCssClass(item) : '';
+    let rowClass = config.getRowCssClass ? config.getRowCssClass(item) : "";
     return (
       <tr className={rowClass}>
         {config.fields.map((field, idx) => (
@@ -168,8 +168,8 @@ function CrudTable({
       editor = field.renderFilterEditor(fieldFilterValue, setFieldFilterValue);
     } else {
       switch (field.filterType) {
-        case 'DATE_RANGE':
-        case 'NUMBER_RANGE':
+        case "DATE_RANGE":
+        case "NUMBER_RANGE":
           editor = (
             <RangeEditor
               fieldFilterValue={fieldFilterValue}
@@ -177,7 +177,7 @@ function CrudTable({
             />
           );
           break;
-        case 'LIKE':
+        case "LIKE":
           editor = (
             <TextLikeEditor
               fieldFilterValue={fieldFilterValue}
@@ -231,7 +231,7 @@ function CrudTable({
     );
     return (
       <span className="filter-pill">
-        {fieldCfg.label}: {filter[field].join(', ')}
+        {fieldCfg.label}: {filter[field].join(", ")}
         <span
           className="filter-pill-remove"
           onClick={(e) => {
@@ -293,7 +293,7 @@ function CrudTable({
 }
 
 const TextEqualEditor = ({ fieldFilterValue, onChange }) => {
-  const [value] = fieldFilterValue ? fieldFilterValue : [''];
+  const [value] = fieldFilterValue ? fieldFilterValue : [""];
   return (
     <div className="w200 form-group">
       <input
@@ -306,13 +306,13 @@ const TextEqualEditor = ({ fieldFilterValue, onChange }) => {
 };
 
 const TextLikeEditor = ({ fieldFilterValue, onChange }) => {
-  const [value] = fieldFilterValue ? fieldFilterValue : [''];
+  const [value] = fieldFilterValue ? fieldFilterValue : [""];
 
   return (
     <div className="w200 form-group">
       <input
         type="text"
-        value={('' + value).replaceAll('*', '')}
+        value={("" + value).replaceAll("*", "")}
         onChange={(e) => onChange([`*${e.target.value}*`])}
       />
     </div>
@@ -320,7 +320,7 @@ const TextLikeEditor = ({ fieldFilterValue, onChange }) => {
 };
 
 const RangeEditor = ({ fieldFilterValue, onChange }) => {
-  const [startValue, endValue] = fieldFilterValue ? fieldFilterValue : ['', ''];
+  const [startValue, endValue] = fieldFilterValue ? fieldFilterValue : ["", ""];
   return (
     <div className="flex w200 flex-column">
       <input

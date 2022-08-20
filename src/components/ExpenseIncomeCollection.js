@@ -1,16 +1,24 @@
-import classNames from 'classnames';
-import React from 'react';
-import LoaderAndEmptyWrapper from '../components/LoaderAndEmptyWrapper';
-import LoadMoreButton from '../components/LoadMoreButton';
-import {NumberHelper, StringHelper} from '../Helpers';
-import {useExpenseIncomeStateContext, ExpenseIncomeActions} from '../store/ExpenseIncomeStateContext';
-import OrderToggle from './OrderToggle';
+import classNames from "classnames";
+import React from "react";
+import LoaderAndEmptyWrapper from "../components/LoaderAndEmptyWrapper";
+import LoadMoreButton from "../components/LoadMoreButton";
+import { NumberHelper, StringHelper } from "../Helpers";
+import {
+  useExpenseIncomeStateContext,
+  ExpenseIncomeActions,
+} from "../store/ExpenseIncomeStateContext";
+import { OrderToggle } from "./OrderToggle";
 
-function ExpenseIncomeCollection({onEdit, onDelete, onPay}) {
-  const [{list, loadingPending, hasMore, order}, dispatch] = useExpenseIncomeStateContext();
+function ExpenseIncomeCollection({ onEdit, onDelete, onPay }) {
+  const [{ list, loadingPending, hasMore, order }, dispatch] =
+    useExpenseIncomeStateContext();
 
   function getTotal() {
-    let total = list.reduce((tot, curr) => tot + (curr.paymentType === 'EXPENSE' ? -1 * curr.amount : curr.amount), 0);
+    let total = list.reduce(
+      (tot, curr) =>
+        tot + (curr.paymentType === "EXPENSE" ? -1 * curr.amount : curr.amount),
+      0
+    );
     return NumberHelper.formatBRL(total);
   }
 
@@ -19,41 +27,46 @@ function ExpenseIncomeCollection({onEdit, onDelete, onPay}) {
       <tr
         key={item.id}
         className={classNames({
-          italic: item.status === 'PAID',
+          italic: item.status === "PAID",
           bold: item.overdue,
-        })}>
+        })}
+      >
         <td>{item.dueDate}</td>
         <td>
           <i
-            className={classNames('bx', {
-              'bx-layer-minus': item.paymentType === 'EXPENSE',
-              'bx-layer-plus': item.paymentType === 'INCOME',
-            })}></i>
+            className={classNames("bx", {
+              "bx-layer-minus": item.paymentType === "EXPENSE",
+              "bx-layer-plus": item.paymentType === "INCOME",
+            })}
+          ></i>
         </td>
         <td>{item.categoryDescription}</td>
         <td>{StringHelper.abbreviate(item.history, 30)}</td>
         <td
-          className={classNames('text-right', {
-            income: item.paymentType === 'INCOME',
-            outcome: item.paymentType === 'EXPENSE',
-          })}>
+          className={classNames("text-right", {
+            income: item.paymentType === "INCOME",
+            outcome: item.paymentType === "EXPENSE",
+          })}
+        >
           {NumberHelper.formatBRL(item.amount)}
         </td>
         <td>
           <i
-            className={classNames('bx', {
-              'bx-check-double': item.status === 'PAID',
-              'bx-info-circle': item.status === 'PENDING',
-            })}></i>
+            className={classNames("bx", {
+              "bx-check-double": item.status === "PAID",
+              "bx-info-circle": item.status === "PENDING",
+            })}
+          ></i>
         </td>
         <td className="text-right">
-          {onPay && item.status === 'PENDING' && (
+          {onPay && item.status === "PENDING" && (
             <a
               href="#pay"
               onClick={(e) => {
                 e.preventDefault();
                 onPay(item);
-              }}>
+              }}
+            >
               <i className="bx bx-badge-check"></i>Pay
             </a>
           )}
@@ -63,7 +76,8 @@ function ExpenseIncomeCollection({onEdit, onDelete, onPay}) {
               onClick={(e) => {
                 e.preventDefault();
                 onEdit(item);
-              }}>
+              }}
+            >
               <i className="bx bx-pencil"></i>
             </a>
           )}
@@ -72,10 +86,11 @@ function ExpenseIncomeCollection({onEdit, onDelete, onPay}) {
               href="#delete"
               onClick={(e) => {
                 e.preventDefault();
-                if (window.confirm('Delete Record?')) {
+                if (window.confirm("Delete Record?")) {
                   onDelete(item);
                 }
-              }}>
+              }}
+            >
               <i className="bx bx-trash"></i>
             </a>
           )}
@@ -150,7 +165,10 @@ function ExpenseIncomeCollection({onEdit, onDelete, onPay}) {
           </tr>
         </tbody>
       </table>
-      <LoadMoreButton hasMore={hasMore} onClick={() => dispatch(ExpenseIncomeActions.nextPage())} />
+      <LoadMoreButton
+        hasMore={hasMore}
+        onClick={() => dispatch(ExpenseIncomeActions.nextPage())}
+      />
     </LoaderAndEmptyWrapper>
   );
 }

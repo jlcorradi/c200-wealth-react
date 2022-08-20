@@ -14,7 +14,7 @@ import {BankAccountsView} from '../views/BankAccountsView';
 import ExpensesIncomeView from '../views/ExpensesIncomeView';
 import RecurringExpenseIncomeView from '../views/RecurringExpenseIncomeView';
 import InvestmentsView from '../views/InvestmentsView';
-import Popup from '../components/Popup';
+import {Popup} from '../components/Popup';
 import QueryService from '../services/QueryService';
 import NotificationWidget from '../components/NotificationWidget';
 import ReportingView from '../views/ReportingView';
