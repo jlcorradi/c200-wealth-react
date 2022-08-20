@@ -8,5 +8,5 @@ export type BankAccountEntity = {
   description: string;
   active: boolean;
   type: BankAccountType;
-  relatedDescriptions?: string
+  relatedDescriptions?: string;
 };

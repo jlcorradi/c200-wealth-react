@@ -1,10 +1,11 @@
 import classNames from "classnames";
-import React, { useEffect, useState } from "react";
+import React, { FC, SyntheticEvent, useEffect, useState } from "react";
 import BankAccountService from "../services/BankAccountServices";
 import DividendYieldService from "../services/DividendYieldService";
 import {
   DividendYieldActions,
   useDividendYieldStateContext,
+  //@ts-ignore
 } from "../store/DividendYieldStateContext";
 import { useDashboardContext } from "../store/DashBoardStateContext";
 import {
@@ -18,6 +19,8 @@ import {
   ruleRunner,
   runValidations,
 } from "../Validatoion";
+import { BankAccountEntity } from "../types/bank-account";
+import { DividendYieldEntity, DividendYieldType } from "../types/dividend-yield";
 
 const validationRules = [
   ruleRunner("bankAccountId", "BankAccount", required),
@@ -27,24 +30,30 @@ const validationRules = [
   ruleRunner("amount", "Amount", required),
 ];
 
-const EMPTY_MODEL = {
+const EMPTY_MODEL: DividendYieldEntity = {
   paymentDate: "",
   symbol: "",
-  yieldType: "",
+  yieldType: DividendYieldType.Rendiment,
   quantity: 0,
   amount: 0.0,
-  bankAccountId: "",
+  bankAccountId: -1,
 };
 
-function DividendYieldInstance({ visible, onDismiss }) {
+export const DividendYieldInstance: FC<{
+  visible: boolean;
+  onDismiss: () => void;
+}> = ({ visible, onDismiss }) => {
   const [, dispatchDYEvent] = useDividendYieldStateContext();
-  const { state, dispatchPortfolioEvent } = usePortfolioStateContext();
+  const { state, dispatch: dispatchPortfolioEvent } =
+    usePortfolioStateContext();
   const { actions: dashboardActions } = useDashboardContext();
 
-  const [model, seetModel] = useState(EMPTY_MODEL);
+  const [model, seetModel] = useState<DividendYieldEntity>(EMPTY_MODEL);
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
-  const [bankAccountList, setBankAccountList] = useState([]);
+  const [bankAccountList, setBankAccountList] = useState<BankAccountEntity[]>(
+    []
+  );
 
   useEffect(() => {
     BankAccountService.getInvestmentAccounts().then(({ data }) =>
@@ -52,7 +61,7 @@ function DividendYieldInstance({ visible, onDismiss }) {
     );
   }, []);
 
-  function onSubmit(e) {
+  function onSubmit(e: SyntheticEvent) {
     e.preventDefault();
     setSubmitted(true);
     let newErrors = runValidations(model, validationRules);
@@ -72,8 +81,8 @@ function DividendYieldInstance({ visible, onDismiss }) {
     }
   }
 
-  function onChange(field, value) {
-    let newModel = Object.assign({}, model);
+  function onChange(field: string, value: any) {
+    let newModel: any = Object.assign({}, model);
     newModel[field] = value;
     seetModel(newModel);
     let newErrors = runValidations(newModel, validationRules);
@@ -91,17 +100,17 @@ function DividendYieldInstance({ visible, onDismiss }) {
         </div>
         <div
           className={classNames("form-group", "padding-h", "flex-1", {
-            error: errors.bankAccountId,
+            error: (errors as any).bankAccountId,
           })}
         >
           <label htmlFor="bankAccountId">Account</label>
           <select
-            type="text"
+            data-type="text"
             name="bankAccountId"
             value={model.bankAccountId}
             onChange={(e) => onChange(e.target.name, e.target.value)}
           >
-            <option value="" defaultValue>
+            <option value="" data-defaultValue>
               Select
             </option>
             {bankAccountList.map((a) => (
@@ -110,12 +119,12 @@ function DividendYieldInstance({ visible, onDismiss }) {
               </option>
             ))}
           </select>
-          <small>{errors.bankAccountId}</small>
+          <small>{(errors as any).bankAccountId}</small>
         </div>
         <div className="flex flex-row">
           <div
             className={classNames("form-group", "padding-h", "w200", {
-              error: errors.paymentDate,
+              error: (errors as any).paymentDate,
             })}
           >
             <label htmlFor="paymentDate">Date</label>
@@ -126,11 +135,11 @@ function DividendYieldInstance({ visible, onDismiss }) {
               value={model.paymentDate}
               onChange={(e) => onChange(e.target.name, e.target.value)}
             />
-            <small>{errors.paymentDate}</small>
+            <small>{(errors as any).paymentDate}</small>
           </div>
           <div
             className={classNames("form-group", "padding-h", "flex-1", {
-              error: errors.symbol,
+              error: (errors as any).symbol,
             })}
           >
             <label htmlFor="symbol">Symbol</label>
@@ -142,13 +151,13 @@ function DividendYieldInstance({ visible, onDismiss }) {
                 onChange(e.target.name, e.target.value.toUpperCase())
               }
             />
-            <small>{errors.symbol}</small>
+            <small>{(errors as any).symbol}</small>
           </div>
         </div>
         <div className="flex flex-row">
           <div
             className={classNames("form-group", "padding-h", "flex-1", {
-              error: errors.amount,
+              error: (errors as any).amount,
             })}
           >
             <label htmlFor="amount">Amount</label>
@@ -158,7 +167,7 @@ function DividendYieldInstance({ visible, onDismiss }) {
               value={model.amount}
               onChange={(e) => onChange(e.target.name, e.target.value)}
             />
-            <small>{errors.amount}</small>
+            <small>{(errors as any).amount}</small>
           </div>
           <div className="form-group padding-h">
             <label htmlFor="quantity">Quantity</label>
@@ -172,7 +181,7 @@ function DividendYieldInstance({ visible, onDismiss }) {
         </div>
         <div
           className={classNames("form-group", "padding-h", "flex-1", {
-            error: errors.yieldType,
+            error: (errors as any).yieldType,
           })}
         >
           <label htmlFor="Yield Type">Yield Type</label>
@@ -189,7 +198,7 @@ function DividendYieldInstance({ visible, onDismiss }) {
             <option value="DIVIDEND_YIELD">Dividend Yield</option>
             <option value="RENDIMENT">Rendiment</option>
           </select>
-          <small>{errors.yieldType}</small>
+          <small>{(errors as any).yieldType}</small>
         </div>
         <div className="buttons" style={{ alignSelf: "flex-end" }}>
           <button type="submit">
@@ -202,6 +211,6 @@ function DividendYieldInstance({ visible, onDismiss }) {
       </form>
     </OffCanva>
   );
-}
+};
 
 export default DividendYieldInstance;

@@ -1,12 +1,12 @@
 import React, { Dispatch } from "react";
 import { ArrayHelper } from "../Helpers";
-import PortfolioService from "../services/PortfolioService";
+import { PortfolioService } from "../services/PortfolioService";
 
 type Action = "LOAD" | "SET_SUMMARY" | "SET_PORTFOLIO";
 
 export interface IPortfolioAction {
   type: Action;
-  payload: any;
+  payload?: any;
 }
 
 const portfolioInitialState = {
@@ -29,9 +29,14 @@ export type PortfolioState = typeof portfolioInitialState;
 const PortfolioContext = React.createContext<{
   state: PortfolioState;
   dispatch: Dispatch<IPortfolioAction>;
-} | null>(null);
+}>({
+  state: {} as unknown as PortfolioState,
+  dispatch: {} as unknown as Dispatch<IPortfolioAction>,
+});
 
-export const load = () => ({ action: "LOAD" });
+export const load = (): IPortfolioAction => {
+  return { type: "LOAD" };
+};
 
 const portfolioReducer = (state: any, { type, payload }: IPortfolioAction) => {
   switch (type) {

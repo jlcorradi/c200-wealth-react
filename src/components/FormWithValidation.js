@@ -1,9 +1,9 @@
-import React from 'react';
-import { hasErrors, runValidations } from '../Validatoion';
-import classNames from 'classnames';
-import CustomCombo from './CustomCombo';
-import { Constants } from '../Constants';
-import ExpenseIncomeCategoryCombo from '../ExpenseIncomeCategoryCombo';
+import React from "react";
+import { hasErrors, runValidations } from "../Validatoion";
+import classNames from "classnames";
+import { CustomCombo } from "./CustomCombo";
+import { Constants } from "../Constants";
+import ExpenseIncomeCategoryCombo from "../ExpenseIncomeCategoryCombo";
 
 // const exConfig = {
 //   fields: [
@@ -65,7 +65,7 @@ function FormWithValidation({ config, modelToEdit, onSubmit, onDismiss }) {
   return (
     <form
       onSubmit={formSubmit}
-      className={classNames('flex', 'flex-column', {
+      className={classNames("flex", "flex-column", {
         submitted: submitted,
       })}
     >
@@ -74,10 +74,10 @@ function FormWithValidation({ config, modelToEdit, onSubmit, onDismiss }) {
           let editor = (
             <div
               className={classNames(
-                'form-group',
-                field.cssClass ? field.cssClass : 'flex-1',
-                'padding-h',
-                'w200',
+                "form-group",
+                field.cssClass ? field.cssClass : "flex-1",
+                "padding-h",
+                "w200",
                 {
                   error: errors[field.field],
                 }
@@ -104,7 +104,7 @@ function FormWithValidation({ config, modelToEdit, onSubmit, onDismiss }) {
           </div>
         ))}
       </div>
-      <div className="buttons" style={{ alignSelf: 'flex-end' }}>
+      <div className="buttons" style={{ alignSelf: "flex-end" }}>
         <button type="submit">
           <i className="bx bx-save"></i>Save
         </button>
@@ -122,7 +122,7 @@ function Editor({ field, model, onChange }) {
   }
 
   switch (field.fieldType) {
-    case 'EXPENSE_INCOME_CATEGORY':
+    case "EXPENSE_INCOME_CATEGORY":
       return (
         <ExpenseIncomeCategoryCombo
           className={field.className}
@@ -131,7 +131,7 @@ function Editor({ field, model, onChange }) {
           disabled={field.disabled}
         ></ExpenseIncomeCategoryCombo>
       );
-    case 'PAYMENT_TYPE':
+    case "PAYMENT_TYPE":
       return (
         <CustomCombo
           itemsArray={Constants.paymentTypes}
@@ -141,7 +141,7 @@ function Editor({ field, model, onChange }) {
           disabled={field.disabled}
         ></CustomCombo>
       );
-    case 'textarea':
+    case "textarea":
       return (
         <textarea
           className={field.className}
@@ -154,7 +154,7 @@ function Editor({ field, model, onChange }) {
           rows={5}
         />
       );
-    case 'checkbox':
+    case "checkbox":
       return (
         <input
           type="checkbox"
@@ -168,7 +168,7 @@ function Editor({ field, model, onChange }) {
     default:
       return (
         <input
-          type={field.fieldType ? field.fieldType : 'text'}
+          type={field.fieldType ? field.fieldType : "text"}
           name={field.field}
           value={model[field.field]}
           placeholder={field.placeHolder}

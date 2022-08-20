@@ -1,19 +1,27 @@
-import React from 'react';
+import React, { FC } from "react";
 
-function CustomCombo({
+export const CustomCombo: FC<{
+  itemsArray: any[];
+  value: any;
+  className?: string;
+  label?: string;
+  errorObject?: any;
+  onChange: (value: any) => void;
+  disabled?: boolean;
+}> = ({
   itemsArray,
   value,
   className,
   label,
   errorObject,
   onChange,
-  disabled
-}) {
+  disabled = false,
+}) => {
   return (
     <>
       {label && <label htmlFor="bankAccountId">{label}</label>}
       <select
-        type="text"
+        data-type="text"
         name="bankAccountId"
         className={className}
         value={value}
@@ -32,6 +40,6 @@ function CustomCombo({
       {errorObject && <small>{errorObject}</small>}
     </>
   );
-}
+};
 
 export default CustomCombo;

@@ -1,7 +1,7 @@
-import React from 'react';
-import { NotificationManager } from 'react-notifications';
-import { http } from '../Http';
-import LoaderAndEmptyWrapper from './LoaderAndEmptyWrapper';
+import React from "react";
+import { NotificationManager } from "react-notifications";
+import { http } from "../Http";
+import LoaderAndEmptyWrapper from "./LoaderAndEmptyWrapper";
 
 function Interop() {
   const [fileType, setFileType] = React.useState();
@@ -37,22 +37,22 @@ function Interop() {
             onSubmit={(e) => {
               e.preventDefault();
               if (!fileType) {
-                NotificationManager.error('Please, select a File Type.');
+                NotificationManager.error("Please, select a File Type.");
                 return;
               }
 
               if (!file) {
-                NotificationManager.error('Please, select a file to upload.');
+                NotificationManager.error("Please, select a file to upload.");
                 return;
               }
 
               let formData = new FormData();
-              formData.set('file', file);
+              formData.set("file", file);
               setIsLoading(true);
               setLogs([]);
               http
                 .post(`/api/v1/system/interop/${fileType}`, formData, {
-                  headers: { 'Content-Type': 'multipart/form-data' },
+                  headers: { "Content-Type": "multipart/form-data" },
                 })
                 .then(({ data }) => setLogs(data))
                 .finally(() => setIsLoading(false));

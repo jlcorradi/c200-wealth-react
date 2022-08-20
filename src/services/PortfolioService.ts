@@ -3,8 +3,6 @@ import { IPortfolio } from "../types/portfolio";
 
 const ENDPOINT = "/api/v1/portfolio";
 
-const PortfolioService = {
+export const PortfolioService = {
   getPortfolio: () => http.get<IPortfolio>(ENDPOINT),
 };
-
-export default PortfolioService;
