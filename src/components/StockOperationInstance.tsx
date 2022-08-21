@@ -15,7 +15,7 @@ import {
 import {
   StockOperationEntity,
   StockOperationType,
-} from "../types/stock-operation";
+} from "../types/stock";
 import { BankAccountEntity } from "../types/bank-account";
 
 const EMPTY_MODEL: StockOperationEntity = {

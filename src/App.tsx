@@ -21,8 +21,7 @@ import { StockOperationContextProvider } from "./store/StockOperationStateContex
 import { combineComponents } from "./store/CombineProviders";
 // @ts-ignore
 import { PortfolioContextProvider } from "./store/PortfolioStateContext";
-// @ts-ignore
-import WatchListStateProvider from "./store/WatchListStateProvider";
+import { WatchListContextProvider } from "./store/WatchListStateProvider";
 // @ts-ignore
 import { DashboardContextProvider } from "./store/DashBoardStateContext";
 import React from "react";
@@ -34,7 +33,7 @@ const providers = [
   PortfolioTemplateContextProvider,
   RecurringExpenseIncomeContextProvider,
   StockOperationContextProvider,
-  WatchListStateProvider,
+  WatchListContextProvider,
   PortfolioContextProvider,
 ];
 

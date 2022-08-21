@@ -1,5 +1,5 @@
 import { http } from "../Http";
-import { StockOperationEntity } from "../types/stock-operation";
+import { StockOperationEntity } from "../types/stock";
 
 const ENDPOINT = "/api/v1/stock_operations";
 

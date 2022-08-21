@@ -1,75 +1,67 @@
-import React from 'react';
-import {
-  loadedAction,
-  setToLoadAction,
-  useWatchListContext,
-} from '../store/WatchListStateProvider';
-import QueryService from '../services/QueryService';
-import WatchListService from '../services/WatchListService';
-import OffCanva from '../template/OffCanva';
-import FormWithValidation from './FormWithValidation';
-import { required, ruleRunner } from '../Validatoion';
-import { NumberHelper } from '../Helpers';
+import React, { FC, FocusEvent, SyntheticEvent } from "react";
+import { useWatchListContext } from "../store/WatchListStateProvider";
+import QueryService from "../services/QueryService";
+import WatchListService from "../services/WatchListService";
+import OffCanva from "../template/OffCanva";
+//@ts-ignore
+import FormWithValidation from "./FormWithValidation";
+import { required, ruleRunner } from "../Validatoion";
+import { NumberHelper } from "../Helpers";
+import { StockWatchListEntity } from "../types/stock";
 
 const formConfig = {
   fields: [
     {
-      field: 'symbol',
-      rowGroup: 'stock',
-      label: 'Symbol',
-      cssClass: 'w100',
-      onBlur: (e, onChange) => {
-        if (e.target.length < 4) {
+      field: "symbol",
+      rowGroup: "stock",
+      label: "Symbol",
+      cssClass: "w100",
+      onBlur: async (
+        e: FocusEvent<HTMLInputElement>,
+        onChange: (field: string, value: any) => void
+      ) => {
+        if (e.target.value.length < 4) {
           return;
         }
-        QueryService.query(
-          'StockEntity',
+
+        const { data } = await QueryService.query<StockWatchListEntity>(
+          "StockEntity",
           { symbol: e.target.value.toUpperCase() },
-          'symbol'
-        ).then(({ data }) => {
-          if (data.content.length > 0) {
-            onChange('description', data.content[0].description);
-          }
-        });
+          "symbol"
+        );
+
+        if (data.content.length > 0) {
+          onChange("description", data.content[0].description);
+        }
       },
     },
     {
-      field: 'description',
-      rowGroup: 'stock',
-      label: 'Description',
+      field: "description",
+      rowGroup: "stock",
+      label: "Description",
       disabled: true,
     },
-    { field: 'lowerTarget', rowGroup: 'target', label: 'Lower Target' },
+    { field: "lowerTarget", rowGroup: "target", label: "Lower Target" },
     {
-      field: 'upperTarget',
-      rowGroup: 'target',
-      cssClass: 'flex-1',
-      label: 'Upper Target',
+      field: "upperTarget",
+      rowGroup: "target",
+      cssClass: "flex-1",
+      label: "Upper Target",
     },
   ],
   validationRules: [
-    ruleRunner('symbol', 'Symbol', required),
-    ruleRunner('lowerTarget', 'lowerTarget', required),
-    ruleRunner('upperTarget', 'upperTarget', required),
+    ruleRunner("symbol", "Symbol", required),
+    ruleRunner("lowerTarget", "lowerTarget", required),
+    ruleRunner("upperTarget", "upperTarget", required),
   ],
 };
 
 // TODO: make validation Rules dynamic
 
 function WatchListList() {
-  const [{ isLoading, watchListList, order }, dispatch] = useWatchListContext();
+  const { state, actions } = useWatchListContext();
   const [instanceVisible, setInstanceVisible] = React.useState(false);
-  const [itemToEdit, setItemToEdit] = React.useState();
-
-  React.useEffect(() => {
-    if (isLoading) {
-      QueryService.query('StockWatchListEntity', {}, order, 0, 300).then(
-        ({ data }) => {
-          dispatch(loadedAction(data.content));
-        }
-      );
-    }
-  }, [isLoading]);
+  const [itemToEdit, setItemToEdit] = React.useState<StockWatchListEntity>();
 
   return (
     <>
@@ -81,12 +73,10 @@ function WatchListList() {
               onClick={(e) => {
                 e.preventDefault();
                 setItemToEdit({
-                  symbol: '',
-                  description: '',
-                  lowerTarget: '',
-                  upperTarget: '',
+                  lowerTarget: 0,
+                  upperTarget: 0,
                   active: true,
-                });
+                } as unknown as StockWatchListEntity);
                 setInstanceVisible(true);
               }}
             >
@@ -95,11 +85,11 @@ function WatchListList() {
             </a>
           </div>
         </div>
-        {watchListList.map((item, index) => (
+        {state.watchListList.map((item, index) => (
           <WatchListItem
             item={item}
             key={index}
-            onEditClick={(item) => {
+            onEditClick={(item: StockWatchListEntity) => {
               setInstanceVisible(true);
               setItemToEdit(item);
             }}
@@ -117,10 +107,10 @@ function WatchListList() {
           modelToEdit={itemToEdit}
           config={formConfig}
           onDismiss={() => setInstanceVisible(false)}
-          onSubmit={async (model) => {
+          onSubmit={async (model: StockWatchListEntity) => {
             setInstanceVisible(false);
             await WatchListService.save(model);
-            dispatch(setToLoadAction());
+            actions.reload();
           }}
         ></FormWithValidation>
       </OffCanva>
@@ -128,12 +118,18 @@ function WatchListList() {
   );
 }
 
-function WatchListItem({ item, onEditClick }) {
-  const [, dispatch] = useWatchListContext();
+const WatchListItem: FC<{
+  item: StockWatchListEntity;
+  onEditClick: (e: StockWatchListEntity) => void;
+}> = ({ item, onEditClick }) => {
+  const { state, actions } = useWatchListContext();
   return (
     <div className="flex flex-column">
       <div className="flex flex-row padding-v highlight-hover">
-        <div className="flex flex-row align-items-center" style={{width: "140px"}}>
+        <div
+          className="flex flex-row align-items-center"
+          style={{ width: "140px" }}
+        >
           <img height={20} src={item.thumbImage} alt={item.symbol} />
         </div>
         <div className="flex flex-column padding-h">
@@ -158,7 +154,7 @@ function WatchListItem({ item, onEditClick }) {
         </div>
         <div className="flex flex-column padding-h">
           <small className="label">Active</small>
-          <div>{item.active ? 'Yes' : 'No'}</div>
+          <div>{item.active ? "Yes" : "No"}</div>
         </div>
         <div className="flex flex-column padding-h">
           <div className="buttons padding">
@@ -177,11 +173,11 @@ function WatchListItem({ item, onEditClick }) {
               className="danger"
               onClick={async (e) => {
                 e.preventDefault();
-                if (!window.confirm('Delete alarm?')) {
+                if (!window.confirm("Delete alarm?")) {
                   return;
                 }
-                await WatchListService.delete(item.id);
-                dispatch(setToLoadAction());
+                await WatchListService.delete(item.id ?? -1);
+                actions.reload();
               }}
             >
               <i className="bx bx-trash"></i>
@@ -191,6 +187,6 @@ function WatchListItem({ item, onEditClick }) {
       </div>
     </div>
   );
-}
+};
 
 export default WatchListList;

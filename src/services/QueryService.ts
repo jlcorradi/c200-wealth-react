@@ -1,20 +1,26 @@
 import { http } from "../Http";
+import { IPage, Pageable } from "../types/page";
 
 const ENDPOINT = "/api/v1/query";
 
 const QueryService = {
-  query: (
+  query: async <T>(
     entity: string,
     filter: any,
     order: string,
-    page: number,
-    pageSize: number
+    page?: number,
+    pageSize?: number
   ) => {
-    return http.get<any>(`${ENDPOINT}/${entity}`, {
-      params: { q: QueryService.resolveQ(filter), order, pageSize, page },
+    return (await http.get)<IPage<T>>(`${ENDPOINT}/${entity}`, {
+      params: {
+        q: QueryService.resolveQ(filter),
+        order,
+        pageSize: pageSize ?? 3000,
+        page: page ?? 0,
+      },
     });
   },
-  sum: (entity: string, field: string, filter: any) => {
+  sum: async (entity: string, field: string, filter: any) => {
     return http.get<number>(`${ENDPOINT}/${entity}/sum`, {
       params: { field, q: QueryService.resolveQ(filter) },
     });
