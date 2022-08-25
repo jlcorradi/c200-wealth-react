@@ -40,6 +40,7 @@ function InvestmentsView() {
     .startOf("month")
     .subtract(11, "months")
     .format("DD/MM/YYYY");
+
   let [dividendData, setDividendData] = React.useState({
     barSeries: [],
     monthArray: [],
@@ -197,7 +198,7 @@ function InvestmentsView() {
       </TabSet>
 
       <DividendYieldOffCanva
-        monthToShow={monthToShowDetail}
+        monthToShow={monthToShowDetail ?? ""}
         onDismiss={() => setDyOffcanvaVisible(false)}
         visible={dyOffcanvaVisible}
       />

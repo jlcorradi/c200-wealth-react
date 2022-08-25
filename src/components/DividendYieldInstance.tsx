@@ -3,7 +3,6 @@ import React, { FC, SyntheticEvent, useEffect, useState } from "react";
 import BankAccountService from "../services/BankAccountServices";
 import DividendYieldService from "../services/DividendYieldService";
 import {
-  DividendYieldActions,
   useDividendYieldStateContext,
   //@ts-ignore
 } from "../store/DividendYieldStateContext";
@@ -20,7 +19,10 @@ import {
   runValidations,
 } from "../Validatoion";
 import { BankAccountEntity } from "../types/bank-account";
-import { DividendYieldEntity, DividendYieldType } from "../types/dividend-yield";
+import {
+  DividendYieldEntity,
+  DividendYieldType,
+} from "../types/dividend-yield";
 
 const validationRules = [
   ruleRunner("bankAccountId", "BankAccount", required),
@@ -43,7 +45,10 @@ export const DividendYieldInstance: FC<{
   visible: boolean;
   onDismiss: () => void;
 }> = ({ visible, onDismiss }) => {
-  const [, dispatchDYEvent] = useDividendYieldStateContext();
+  const {
+    state: { filter, hasMore, isLoading, page, totalAmount },
+    actions: { loadData: loadDyList, setFilter, setOrder, setPage },
+  } = useDividendYieldStateContext();
   const { state, dispatch: dispatchPortfolioEvent } =
     usePortfolioStateContext();
   const { actions: dashboardActions } = useDashboardContext();
@@ -68,7 +73,7 @@ export const DividendYieldInstance: FC<{
     setErrors(newErrors);
     if (!hasErrors(newErrors)) {
       DividendYieldService.create(model).then(() => {
-        dispatchDYEvent(DividendYieldActions.setToLoad());
+        loadDyList();
         dispatchPortfolioEvent(loadPortfolio());
         dashboardActions.markToReload();
         setSubmitted(false);

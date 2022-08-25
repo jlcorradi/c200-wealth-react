@@ -1,8 +1,16 @@
-import React from 'react';
-import ReactApexChart from 'react-apexcharts';
-import {NumberHelper} from '../Helpers';
+import React from "react";
+import ReactApexChart from "react-apexcharts";
+import { NumberHelper } from "../Helpers";
 
-function DividendYieldEvolutionChart({monthArray, barSeries, onSelectMonth}) {
+function DividendYieldEvolutionChart({
+  monthArray,
+  barSeries,
+  onSelectMonth,
+}: {
+  monthArray: any[];
+  barSeries: any[];
+  onSelectMonth: (month: string) => void;
+}) {
   return (
     <ReactApexChart
       options={{
@@ -11,29 +19,30 @@ function DividendYieldEvolutionChart({monthArray, barSeries, onSelectMonth}) {
           intersect: false,
           y: {
             formatter: function (val) {
-              return 'R$ ' + NumberHelper.formatBRL(val);
+              return "R$ " + NumberHelper.formatBRL(val);
             },
           },
           x: {
             formatter: (val, opts) => {
               return (
-                'Total: R$ ' +
-                NumberHelper.formatBRL(opts.series.map((item) => item[opts.dataPointIndex]).reduce((n, n1) => n + n1))
+                "Total: R$ " +
+                NumberHelper.formatBRL(
+                  opts.series
+                    .map((item: any) => item[opts.dataPointIndex])
+                    .reduce((n: number, n1: number) => n + n1)
+                )
               );
             },
           },
           followCursor: true,
         },
-        zoom: {
-          enabled: true,
-        },
-        dataLabels: {enabled: false},
+        dataLabels: { enabled: false },
         legend: {
           show: true,
         },
-        title: {text: 'Dividends per month', align: 'left', margin: 20},
+        title: { text: "Dividends per month", align: "left", margin: 20 },
         chart: {
-          type: 'bar',
+          type: "bar",
           height: 300,
           stacked: true,
           events: {
@@ -47,8 +56,7 @@ function DividendYieldEvolutionChart({monthArray, barSeries, onSelectMonth}) {
         plotOptions: {
           bar: {
             dataLabels: {
-              orientation: 'horizontal',
-              distributed: false,
+              orientation: "horizontal",
             },
             horizontal: false,
           },
@@ -57,7 +65,7 @@ function DividendYieldEvolutionChart({monthArray, barSeries, onSelectMonth}) {
           labels: {
             formatter: (val, opts) => {
               // return "yaxis.labels";
-              return 'R$ ' + NumberHelper.formatBRL(val);
+              return "R$ " + NumberHelper.formatBRL(val);
             },
           },
         },

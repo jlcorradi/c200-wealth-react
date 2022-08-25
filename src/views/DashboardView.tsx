@@ -90,37 +90,39 @@ export const DashboardView: React.FC<{}> = () => {
               }
               loadingMessage="Loading Expenses Evolution Chart"
             >
-              <div className="titlebar">
-                <h3>Expenses/Income evolution</h3>
-              </div>
-              <ReactApexChart
-                type="bar"
-                height={380}
-                width={600}
-                series={[
-                  {
-                    name: "Expenses",
-                    data: monthlyExpenseIncomeSummary.map(
-                      (i: ExpenseIncomeSummaryItem) => i.expenseAmount
+              <>
+                <div className="titlebar">
+                  <h3>Expenses/Income evolution</h3>
+                </div>
+                <ReactApexChart
+                  type="bar"
+                  height={380}
+                  width={600}
+                  series={[
+                    {
+                      name: "Expenses",
+                      data: monthlyExpenseIncomeSummary.map(
+                        (i: ExpenseIncomeSummaryItem) => i.expenseAmount
+                      ),
+                    },
+                    {
+                      name: "Incomes",
+                      data: monthlyExpenseIncomeSummary.map(
+                        (i: ExpenseIncomeSummaryItem) => i.incomeAmount
+                      ),
+                    },
+                  ]}
+                  options={{
+                    labels: monthlyExpenseIncomeSummary.map(
+                      (i: ExpenseIncomeSummaryItem) => i.month
                     ),
-                  },
-                  {
-                    name: "Incomes",
-                    data: monthlyExpenseIncomeSummary.map(
-                      (i: ExpenseIncomeSummaryItem) => i.incomeAmount
-                    ),
-                  },
-                ]}
-                options={{
-                  labels: monthlyExpenseIncomeSummary.map(
-                    (i: ExpenseIncomeSummaryItem) => i.month
-                  ),
-                  dataLabels: { enabled: false },
-                  xaxis: {
-                    tooltip: { enabled: false },
-                  },
-                }}
-              ></ReactApexChart>
+                    dataLabels: { enabled: false },
+                    xaxis: {
+                      tooltip: { enabled: false },
+                    },
+                  }}
+                ></ReactApexChart>
+              </>
             </LoaderAndEmptyWrapper>
           </div>
         </div>

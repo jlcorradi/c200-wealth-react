@@ -1,5 +1,5 @@
 import { http } from "../Http";
-import { IPage, Pageable } from "../types/page";
+import { IPage } from "../types/page";
 
 const ENDPOINT = "/api/v1/query";
 
