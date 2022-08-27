@@ -77,6 +77,9 @@ export const Sidebar: FC<{}> = () => {
             <span>Bank Accounts</span>
           </NavLink>
         </li>
+        <li className="menu">
+          <span>React version</span>
+        </li>
       </ul>
     </div>
   );
