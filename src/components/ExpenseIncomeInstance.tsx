@@ -1,7 +1,13 @@
 import classNames from "classnames";
-import React, { useEffect, useState } from "react";
+import React, { FC, SyntheticEvent, useEffect, useState } from "react";
 import { ExpenseIncomeService } from "../services/ExpenseIncomeService";
 import KeyValuePairService from "../services/KeyValuePairService";
+import {
+  ExpenseIncomeEntity,
+  PaymentStatus,
+  PaymentType,
+} from "../types/expense-income";
+import { KeyValuePair } from "../types/key-value-pair";
 import {
   hasErrors,
   minValue,
@@ -13,16 +19,17 @@ import { BankAccountCombo } from "./BankAccountCombo";
 import LoaderAndEmptyWrapper from "./LoaderAndEmptyWrapper";
 
 const EMPTY_MODEL = {
-  paymentType: "",
+  paymentType: PaymentType.Expense,
   dueDate: "",
-  categoryId: "",
+  categoryId: -1,
   amount: 0.0,
   history: "",
   bankAccountId: null,
   paymentDate: "",
   paidAmount: 0,
   feesAndInterest: 0,
-};
+  status: PaymentStatus.Pending,
+} as unknown as ExpenseIncomeEntity;
 
 const validationRules = [
   ruleRunner("paymentType", "Type", required),
@@ -38,15 +45,20 @@ const paymentValidationRules = [
   ruleRunner("paidAmount", "Paid Amount", required),
 ];
 
-function ExpenseIncomeInstance({ id, onSave, onDismiss, showVertically }) {
-  const [errors, setErrors] = useState({});
-  const [model, setModel] = useState(EMPTY_MODEL);
-  const [isLoading, setIsLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [categories, setCategories] = useState([]);
-  const [isUpdating, setIsUpdating] = useState(false);
+export const ExpenseIncomeInstance: FC<{
+  id: number | null;
+  onSave?: (e: ExpenseIncomeEntity) => void;
+  onDismiss: () => void;
+  showVertically?: boolean;
+}> = ({ id, onSave, onDismiss, showVertically = false }) => {
+  const [errors, setErrors] = useState<any>({});
+  const [model, setModel] = useState<ExpenseIncomeEntity>(EMPTY_MODEL);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [submitted, setSubmitted] = useState<boolean>(false);
+  const [categories, setCategories] = useState<KeyValuePair[]>([]);
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
-  const [paymentDataDirty, setPaymentDataDirty] = useState(false);
+  const [paymentDataDirty, setPaymentDataDirty] = useState<boolean>(false);
 
   useEffect(() => {
     KeyValuePairService.listExpenseIncomeCategories().then(({ data }) =>
@@ -64,7 +76,7 @@ function ExpenseIncomeInstance({ id, onSave, onDismiss, showVertically }) {
     }
   }, [id]);
 
-  function submit(e) {
+  function submit(e: SyntheticEvent) {
     e.preventDefault();
     setSubmitted(true);
 
@@ -83,7 +95,7 @@ function ExpenseIncomeInstance({ id, onSave, onDismiss, showVertically }) {
     }
 
     if (isUpdating) {
-      ExpenseIncomeService.update(id, model).then(({ data }) => {
+      ExpenseIncomeService.update(id ?? -1, model).then(({ data }) => {
         if (onSave) {
           onSave(data);
         }
@@ -101,16 +113,16 @@ function ExpenseIncomeInstance({ id, onSave, onDismiss, showVertically }) {
     }
   }
 
-  function onChange(field, value) {
+  function onChange(field: string, value: any) {
     let newModel = { ...model };
-    newModel[field] = value;
+    (newModel as any)[field] = value;
     setModel(newModel);
     let newErrors = runValidations(newModel, validationRules);
     setErrors(newErrors);
     return newModel;
   }
 
-  function onChangePayment(field, value) {
+  function onChangePayment(field: string, value: any) {
     let newModel = onChange(field, value);
     if (!paymentDataDirty) {
       setPaymentDataDirty(true);
@@ -118,7 +130,7 @@ function ExpenseIncomeInstance({ id, onSave, onDismiss, showVertically }) {
         ...newModel,
         paymentDate: newModel.dueDate,
         paidAmount: newModel.amount,
-        status: "PAID",
+        status: PaymentStatus.Paid,
       });
     }
 
@@ -155,7 +167,7 @@ function ExpenseIncomeInstance({ id, onSave, onDismiss, showVertically }) {
                   onChange={(e) => onChange(e.target.name, e.target.value)}
                   value={model["paymentType"]}
                 >
-                  <option value="" defaultValue>
+                  <option value="" data-defaultValue>
                     Select
                   </option>
                   <option value="EXPENSE">Expense</option>
@@ -194,7 +206,7 @@ function ExpenseIncomeInstance({ id, onSave, onDismiss, showVertically }) {
                 onChange={(e) => onChange(e.target.name, e.target.value)}
                 value={model["categoryId"]}
               >
-                <option value="" defaultValue>
+                <option value="" data-defaultValue>
                   Select
                 </option>
                 {categories.map((c) => (
@@ -228,7 +240,7 @@ function ExpenseIncomeInstance({ id, onSave, onDismiss, showVertically }) {
             >
               <label htmlFor="history">History</label>
               <textarea
-                rows="5"
+                data-rows="5"
                 name="history"
                 id="history"
                 onChange={(e) => onChange(e.target.name, e.target.value)}
@@ -255,7 +267,7 @@ function ExpenseIncomeInstance({ id, onSave, onDismiss, showVertically }) {
             >
               <BankAccountCombo
                 label="Account"
-                value={model.bankAccountId}
+                value={model.bankAccountId?.toString() ?? ""}
                 errorObject={errors["bankAccountId"]}
                 onChange={(id) => onChangePayment("bankAccountId", id)}
               />
@@ -272,7 +284,7 @@ function ExpenseIncomeInstance({ id, onSave, onDismiss, showVertically }) {
                 name="paymentDate"
                 id="paymentDate"
                 onChange={(e) => onChangePayment(e.target.name, e.target.value)}
-                value={model["paymentDate"]}
+                value={(model as any)["paymentDate"]}
                 placeholder="dd/MM/yyyy"
               />
               <small>{errors["dueDate"]}</small>
@@ -334,6 +346,4 @@ function ExpenseIncomeInstance({ id, onSave, onDismiss, showVertically }) {
       </form>
     </LoaderAndEmptyWrapper>
   );
-}
-
-export default ExpenseIncomeInstance;
+};

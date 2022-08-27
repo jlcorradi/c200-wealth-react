@@ -1,33 +1,36 @@
-import React, { useState } from 'react';
-import { http } from '../Http';
-import { GlobalActions, useGlobalState } from '../store/GlobalStateContext';
-import { Auth } from '../Auth';
-import '../Login.css';
-import querystring from 'querystring-es3'
+import React, { SyntheticEvent, useState } from "react";
+import { http } from "../Http";
+import { useGlobalState } from "../store/GlobalStateContext";
+import { Auth } from "../Auth";
+import "../Login.css";
+//@ts-ignore
+import querystring from "querystring-es3";
 
-function LoginView() {
-  const [, globalDispatch] = useGlobalState();
-  const [login, setLogin] = useState('');
-  const [password, setPassword] = useState('');
+export function LoginView() {
+  const {
+    actions: { toggleAuthenticated },
+  } = useGlobalState();
+  const [login, setLogin] = useState("");
+  const [password, setPassword] = useState("");
 
-  function submitLogin(e) {
+  function submitLogin(e: SyntheticEvent) {
     e.preventDefault();
     http
       .post(
-        '/auth',
+        "/auth",
         querystring.stringify({
           username: login, //gave the values directly for testing
           password: password,
         }),
         {
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
+            "Content-Type": "application/x-www-form-urlencoded",
           },
         }
       )
       .then((response) => {
         Auth.setToken(response.data.access_token);
-        globalDispatch(GlobalActions.toggleAuthenticated(true));
+        toggleAuthenticated(true);
       });
   }
 
@@ -61,5 +64,3 @@ function LoginView() {
     </form>
   );
 }
-
-export default LoginView;

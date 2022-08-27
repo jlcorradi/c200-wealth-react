@@ -6,7 +6,7 @@ export const Popup: FC<{
   children: ReactNode;
   left?: Boolean;
   onClose?: () => void;
-}> = ({ visible, children, left = true, onClose }) => {
+}> = ({ visible, children, left = false, onClose }) => {
   return (
     <div
       className={classNames("popup shadow text-left", {

@@ -17,7 +17,9 @@ function PendingExpenseIncome() {
   const { state, actions } = useDashboardContext();
   const { pendingExpensesIncomeList } = state.expenseIncomeSum;
 
-  const [, globalDispatch] = useGlobalState();
+  const {
+    actions: { showExpenseIncomeOffset },
+  } = useGlobalState();
 
   function markPaid(item: ExpenseIncomeEntity) {
     ExpenseIncomeService.quickPay(item.id).then(() => actions.markToReload());
@@ -63,9 +65,7 @@ function PendingExpenseIncome() {
                     href="#edit"
                     onClick={(e) => {
                       e.preventDefault();
-                      globalDispatch(
-                        GlobalActions.showExpenseIncomeOffset(item.id)
-                      );
+                      showExpenseIncomeOffset(item.id);
                     }}
                   >
                     <i className="bx bx-pencil"></i>Edit

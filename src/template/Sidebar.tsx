@@ -1,18 +1,21 @@
-import classNames from 'classnames';
-import React, { useState } from 'react';
-import { GlobalActions, useGlobalState } from '../store/GlobalStateContext';
-import { NavLink } from 'react-router-dom';
+import classNames from "classnames";
+import React, { FC, PropsWithChildren, SyntheticEvent, useState } from "react";
+import { useGlobalState } from "../store/GlobalStateContext";
+import { NavLink } from "react-router-dom";
 
-function Sidebar() {
-  const [{ isSidebarActive }, dispatch] = useGlobalState();
+export const Sidebar: FC<{}> = () => {
+  const {
+    state: { isSidebarActive },
+    actions: { toggleSidebarActive },
+  } = useGlobalState();
 
   function close() {
-    dispatch(GlobalActions.toggleSidebarActive(false));
+    toggleSidebarActive(false);
   }
 
   return (
     <div
-      className={classNames('sidebar', { 'sidebar-active': isSidebarActive })}
+      className={classNames("sidebar", { "sidebar-active": isSidebarActive })}
     >
       <div className="logo">
         <i className="bx bx-line-chart"></i>
@@ -77,23 +80,26 @@ function Sidebar() {
       </ul>
     </div>
   );
-}
+};
 
-const Submenu = ({ children, label, icon }) => {
+const Submenu: FC<PropsWithChildren<{ label: string; icon: string }>> = ({
+  children,
+  label,
+  icon,
+}) => {
   const [active, setActive] = useState(false);
-  function toggleActive(e) {
+
+  function toggleActive(e: SyntheticEvent) {
     e.preventDefault();
     setActive(!active);
   }
   return (
-    <li className={classNames('submenu-toggle', { active: active })}>
+    <li className={classNames("submenu-toggle", { active: active })}>
       <a href="#toggleActive" onClick={toggleActive}>
-        <i className={classNames('bx', icon)}></i>
+        <i className={classNames("bx", icon)}></i>
         <span>{label}</span>
       </a>
       <ul className="submenu">{children}</ul>
     </li>
   );
 };
-
-export default Sidebar;

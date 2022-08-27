@@ -7,20 +7,21 @@ import { ArrayHelper, NumberHelper } from "../Helpers";
 // @ts-ignore
 import { useGlobalState } from "../store/GlobalStateContext";
 // @ts-ignore
-import NotificationWidget from "../components/NotificationWidget";
+import { NotificationWidget } from "../components/NotificationWidget";
 import ReactApexChart from "react-apexcharts";
 // @ts-ignore
 import LoaderAndEmptyWrapper from "../components/LoaderAndEmptyWrapper";
 import { Indicator } from "../components/Indicator";
 //@ts-ignore
 import { useDashboardContext } from "../store/DashBoardStateContext";
-import { ExpenseIncomeEntity, PaymentType } from "../types/expense-income";
 import { ExpenseIncomeSummaryItem } from "../services/DashboardService";
 
 export const DashboardView: React.FC<{}> = () => {
   const dashboardCtx = useDashboardContext();
 
-  const [{ notifications }] = useGlobalState();
+  const {
+    state: { notifications },
+  } = useGlobalState();
   const { pendingExpenses, pendingIncome, totalExpenses, totalIncome } =
     dashboardCtx.state.expenseIncomeSum;
 
@@ -130,5 +131,3 @@ export const DashboardView: React.FC<{}> = () => {
     </>
   );
 };
-
-export default DashboardView;

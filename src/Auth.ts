@@ -5,7 +5,7 @@ export const Auth = {
   getToken: () => {
     return localStorage.getItem("c200wealth@auth_token");
   },
-  setToken: (token: string) => {
+  setToken: (token: string | null) => {
     if (!token) {
       localStorage.removeItem("c200wealth@auth_token");
     } else {

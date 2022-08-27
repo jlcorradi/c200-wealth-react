@@ -1,11 +1,13 @@
-import React from 'react';
-import { Route } from 'react-router-dom';
-import { Switch } from 'react-router-dom';
-import { NavLink } from 'react-router-dom';
-import Interop from '../components/Interop';
-import Lists from '../components/Lists';
+import React, { FC } from "react";
+import { Route } from "react-router-dom";
+import { Switch } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+//@ts-ignore
+import Interop from "../components/Interop";
+//@ts-ignore
+import Lists from "../components/Lists";
 
-function SystemView() {
+export const SystemView: FC<{}> = () => {
   return (
     <>
       <div className="titlebar">
@@ -26,6 +28,4 @@ function SystemView() {
       </div>
     </>
   );
-}
-
-export default SystemView;
+};

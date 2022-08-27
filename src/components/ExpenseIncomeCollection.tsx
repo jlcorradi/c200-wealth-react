@@ -1,28 +1,32 @@
 import classNames from "classnames";
-import React from "react";
-import LoaderAndEmptyWrapper from "../components/LoaderAndEmptyWrapper";
-import LoadMoreButton from "../components/LoadMoreButton";
+import React, { FC } from "react";
+import LoaderAndEmptyWrapper from "./LoaderAndEmptyWrapper";
+import LoadMoreButton from "./LoadMoreButton";
 import { NumberHelper, StringHelper } from "../Helpers";
-import {
-  useExpenseIncomeStateContext,
-  ExpenseIncomeActions,
-} from "../store/ExpenseIncomeStateContext";
+import { useExpenseIncomeStateContext } from "../store/ExpenseIncomeStateContext";
 import { OrderToggle } from "./OrderToggle";
+import { ExpenseIncomeEntity } from "../types/expense-income";
 
-function ExpenseIncomeCollection({ onEdit, onDelete, onPay }) {
-  const [{ list, loadingPending, hasMore, order }, dispatch] =
-    useExpenseIncomeStateContext();
+export const ExpenseIncomeCollection: FC<{
+  onEdit: (e: ExpenseIncomeEntity) => void;
+  onDelete: (e: ExpenseIncomeEntity) => void;
+  onPay: (e: ExpenseIncomeEntity) => void;
+}> = ({ onEdit, onDelete, onPay }) => {
+  const {
+    state: { list, isLoading, hasMore, order },
+    actions: { setOrder, changeFilter, nextPage },
+  } = useExpenseIncomeStateContext();
 
   function getTotal() {
     let total = list.reduce(
-      (tot, curr) =>
+      (tot: number, curr: ExpenseIncomeEntity) =>
         tot + (curr.paymentType === "EXPENSE" ? -1 * curr.amount : curr.amount),
       0
     );
     return NumberHelper.formatBRL(total);
   }
 
-  function renderRow(item) {
+  function renderRow(item: ExpenseIncomeEntity) {
     return (
       <tr
         key={item.id}
@@ -100,55 +104,55 @@ function ExpenseIncomeCollection({ onEdit, onDelete, onPay }) {
   }
 
   return (
-    <LoaderAndEmptyWrapper isLoading={loadingPending} isEmpty={!list.length}>
+    <LoaderAndEmptyWrapper isLoading={isLoading} isEmpty={!list.length}>
       <table className="data-table">
         <thead>
           <tr>
             <td>
               <OrderToggle
                 field="dueDate"
-                order={order}
-                onChange={(e) => dispatch(ExpenseIncomeActions.changeOrder(e))}
+                order={order ?? ""}
+                onChange={setOrder}
                 description="Due Date"
               />
             </td>
             <td>
               <OrderToggle
                 field="paymentType"
-                order={order}
-                onChange={(e) => dispatch(ExpenseIncomeActions.changeOrder(e))}
+                order={order ?? ""}
+                onChange={setOrder}
                 description="Type"
               />
             </td>
             <td>
               <OrderToggle
                 field="category.description"
-                order={order}
-                onChange={(e) => dispatch(ExpenseIncomeActions.changeOrder(e))}
+                order={order ?? ""}
+                onChange={setOrder}
                 description="Category"
               />
             </td>
             <td>
               <OrderToggle
                 field="history"
-                order={order}
-                onChange={(e) => dispatch(ExpenseIncomeActions.changeOrder(e))}
+                order={order ?? ""}
+                onChange={setOrder}
                 description="History"
               />
             </td>
             <td>
               <OrderToggle
                 field="amount"
-                order={order}
-                onChange={(e) => dispatch(ExpenseIncomeActions.changeOrder(e))}
+                order={order ?? ""}
+                onChange={setOrder}
                 description="Amount"
               />
             </td>
             <td>
               <OrderToggle
                 field="status"
-                order={order}
-                onChange={(e) => dispatch(ExpenseIncomeActions.changeOrder(e))}
+                order={order ?? ""}
+                onChange={setOrder}
                 description="Status"
               />
             </td>
@@ -158,19 +162,14 @@ function ExpenseIncomeCollection({ onEdit, onDelete, onPay }) {
         <tbody>
           {list.map(renderRow)}
           <tr>
-            <td colSpan="6">Total: </td>
+            <td data-colSpan="6">Total: </td>
             <td className="text-right">
               <strong>{getTotal()}</strong>
             </td>
           </tr>
         </tbody>
       </table>
-      <LoadMoreButton
-        hasMore={hasMore}
-        onClick={() => dispatch(ExpenseIncomeActions.nextPage())}
-      />
+      <LoadMoreButton enabled={hasMore} onClick={nextPage} />
     </LoaderAndEmptyWrapper>
   );
-}
-
-export default ExpenseIncomeCollection;
+};

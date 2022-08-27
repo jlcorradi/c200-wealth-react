@@ -1,34 +1,27 @@
-import React, { useEffect, useState } from "react";
-import ExpenseIncomeCollection from "../components/ExpenseIncomeCollection";
-import ExpenseIncomeInstance from "../components/ExpenseIncomeInstance";
+import React, { FC, useEffect, useState } from "react";
+import { ExpenseIncomeCollection } from "../components/ExpenseIncomeCollection";
+import { ExpenseIncomeInstance } from "../components/ExpenseIncomeInstance";
 import GlobalFilter from "../components/GlobalFilter";
 import { ExpenseIncomeService } from "../services/ExpenseIncomeService";
 import { useDashboardContext } from "../store/DashBoardStateContext";
-import {
-  ExpenseIncomeActions,
-  useExpenseIncomeStateContext,
-} from "../store/ExpenseIncomeStateContext";
+import { useExpenseIncomeStateContext } from "../store/ExpenseIncomeStateContext";
+//@ts-ignore
 import Modal from "../template/Modal";
+import { ExpenseIncomeEntity } from "../types/expense-income";
 
-function ExpensesIncomeView() {
-  const [{ loadingPending, page, filter, order }, dispatch] =
-    useExpenseIncomeStateContext();
-  const [showingInstance, setShowingInstance] = useState(false);
-  const [idToUpdate, setIdToUpdate] = useState(null);
+export const ExpensesIncomeView: FC<{}> = () => {
+  const {
+    state: { isLoading, page, filter, order },
+    actions: { loadData, changeFilter },
+  } = useExpenseIncomeStateContext();
+  const [showingInstance, setShowingInstance] = useState<boolean>(false);
+  const [idToUpdate, setIdToUpdate] = useState<number | null>(null);
   const { actions: DashboardActions } = useDashboardContext();
 
-  const [filterVisible, setFilterVisible] = useState(false);
-
-  useEffect(loadExpenseIncomes, [loadingPending]);
-
-  function loadExpenseIncomes() {
-    ExpenseIncomeService.query(page, filter, order).then(({ data }) =>
-      dispatch(ExpenseIncomeActions.loadList(data))
-    );
-  }
+  const [filterVisible, setFilterVisible] = useState<boolean>(false);
 
   function reload() {
-    dispatch(ExpenseIncomeActions.setToLoad());
+    loadData();
     DashboardActions.markToReload();
   }
 
@@ -76,12 +69,9 @@ function ExpensesIncomeView() {
         onClose={() => setShowingInstance(false)}
       >
         <ExpenseIncomeInstance
-          id={idToUpdate}
+          id={idToUpdate ?? null}
           onDismiss={() => setShowingInstance(false)}
-          onSave={(e) => {
-            dispatch(ExpenseIncomeActions.setToLoad());
-            DashboardActions.markToReload();
-          }}
+          onSave={reload}
         />
       </Modal>
 
@@ -91,12 +81,10 @@ function ExpensesIncomeView() {
         onDismiss={() => setFilterVisible(false)}
         filter={filter}
         onChange={(newFilter) => {
-          dispatch(ExpenseIncomeActions.changeFilter(newFilter));
+          changeFilter(newFilter);
           setFilterVisible(false);
         }}
       ></GlobalFilter>
     </>
   );
-}
-
-export default ExpensesIncomeView;
+};

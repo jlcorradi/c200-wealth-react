@@ -1,9 +1,9 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
-import {GlobalStateProvider} from './store/GlobalStateContext';
+import React from "react";
+import ReactDOM from "react-dom";
+import { App } from "./App";
+import { GlobalStateProvider } from "./store/GlobalStateContext";
 
-import 'react-notifications/lib/notifications.css';
+import "react-notifications/lib/notifications.css";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -11,5 +11,5 @@ ReactDOM.render(
       <App />
     </GlobalStateProvider>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root")
 );

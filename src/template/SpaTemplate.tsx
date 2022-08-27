@@ -1,49 +1,42 @@
-import classNames from 'classnames';
-import React from 'react';
-import { GlobalActions, useGlobalState } from '../store/GlobalStateContext';
-import { Auth } from '../Auth';
+import classNames from "classnames";
+import React from "react";
+import { useGlobalState } from "../store/GlobalStateContext";
+import { Auth } from "../Auth";
 import {
   HashRouter as Router,
   Switch,
   Route,
   Redirect,
   NavLink,
-} from 'react-router-dom';
-import DashboardView from '../views/DashboardView';
-import {BankAccountsView} from '../views/BankAccountsView';
-import ExpensesIncomeView from '../views/ExpensesIncomeView';
-import RecurringExpenseIncomeView from '../views/RecurringExpenseIncomeView';
-import InvestmentsView from '../views/InvestmentsView';
-import {Popup} from '../components/Popup';
-import QueryService from '../services/QueryService';
-import NotificationWidget from '../components/NotificationWidget';
-import ReportingView from '../views/ReportingView';
-import SystemView from '../views/SystemView';
-import Sidebar from './Sidebar';
-import GlobalOffCanva from '../components/GlobalOffset';
+} from "react-router-dom";
+import { DashboardView } from "../views/DashboardView";
+import { BankAccountsView } from "../views/BankAccountsView";
+import { ExpensesIncomeView } from "../views/ExpensesIncomeView";
+//@ts-ignore
+import RecurringExpenseIncomeView from "../views/RecurringExpenseIncomeView";
+import InvestmentsView from "../views/InvestmentsView";
+import { Popup } from "../components/Popup";
+import QueryService from "../services/QueryService";
+import { NotificationWidget } from "../components/NotificationWidget";
+//@ts-ignore
+import ReportingView from "../views/ReportingView";
+import { SystemView } from "../views/SystemView";
+import { Sidebar } from "./Sidebar";
+import GlobalOffCanva from "../components/GlobalOffset";
+import { DashboardContextProvider } from "../store/DashBoardStateContext";
+import { ExpenseIncomeStateProvider } from "../store/ExpenseIncomeStateContext";
 
-function SpaTemplate() {
-  const [{ loadNotifications }, globalDispatch] = useGlobalState();
-  const [{ isSidebarActive }, dispatch] = useGlobalState();
+export function SpaTemplate() {
+  const {
+    state: { isSidebarActive },
+    actions: { toggleAuthenticated, toggleSidebarActive },
+  } = useGlobalState();
+
   const [previewNotificationsVisible, setPreviewNotificationsVisible] =
     React.useState(false);
 
-  React.useEffect(() => {
-    if (loadNotifications && Auth.isValidSession()) {
-      QueryService.query(
-        'NotificationEntity',
-        { read: false },
-        'notificationDate(ASC)',
-        0,
-        100
-      ).then(({ data }) =>
-        globalDispatch(GlobalActions.notificationsLoaded(data.content))
-      );
-    }
-  }, [loadNotifications]);
-
   if (!Auth.isValidSession()) {
-    globalDispatch(GlobalActions.toggleAuthenticated(false));
+    toggleAuthenticated(false);
     return null;
   }
 
@@ -52,7 +45,7 @@ function SpaTemplate() {
       <Sidebar></Sidebar>
 
       <div
-        className={classNames('main', { 'sidebar-active': isSidebarActive })}
+        className={classNames("main", { "sidebar-active": isSidebarActive })}
       >
         <div className="content-wrapper">
           <div className="topbar">
@@ -61,11 +54,7 @@ function SpaTemplate() {
                 <div className="w100">
                   <i
                     className="bx bx-menu"
-                    onClick={() =>
-                      globalDispatch(
-                        GlobalActions.toggleSidebarActive(!isSidebarActive)
-                      )
-                    }
+                    onClick={() => toggleSidebarActive(!isSidebarActive)}
                   ></i>
                 </div>
               </div>
@@ -83,7 +72,7 @@ function SpaTemplate() {
                     className="bx bx-exit"
                     onClick={(e) => {
                       Auth.setToken(null);
-                      dispatch(GlobalActions.toggleAuthenticated(false));
+                      toggleAuthenticated(false);
                     }}
                   ></i>
                   <Popup
@@ -101,10 +90,24 @@ function SpaTemplate() {
           </div>
           <div className="content">
             <Switch>
-              <Route path="/dashboard" component={DashboardView} />
+              <Route
+                path="/dashboard"
+                render={() => (
+                  <DashboardContextProvider>
+                    <DashboardView />
+                  </DashboardContextProvider>
+                )}
+              />
               <Route path="/bank-accounts" component={BankAccountsView} />
               <Route path="/investments" component={InvestmentsView} />
-              <Route path="/expense-incomes" component={ExpensesIncomeView} />
+              <Route
+                path="/expense-incomes"
+                render={() => (
+                  <ExpenseIncomeStateProvider>
+                    <ExpensesIncomeView />
+                  </ExpenseIncomeStateProvider>
+                )}
+              />
               <Route
                 path="/recurring-expense-incomes"
                 component={RecurringExpenseIncomeView}

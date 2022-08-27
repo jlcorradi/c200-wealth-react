@@ -6,8 +6,11 @@ import classNames from "classnames";
 import { NotificationService } from "../services/NotificationService";
 import { NotificationEntity } from "../types/notification";
 
-function NotificationWidget() {
-  const [{ notifications }, globalDispatch] = useGlobalState();
+export function NotificationWidget() {
+  const {
+    state: { notifications },
+    actions: { loadNotifications },
+  } = useGlobalState();
 
   function Notification({
     notification,
@@ -38,7 +41,7 @@ function NotificationWidget() {
             onClick={(e) => {
               e.preventDefault();
               NotificationService.markAsRead(notification.id).then(() =>
-                globalDispatch(GlobalActions.triggerLoadNotifications())
+                loadNotifications()
               );
             }}
           >
@@ -65,5 +68,3 @@ function NotificationWidget() {
     </>
   );
 }
-
-export default NotificationWidget;
