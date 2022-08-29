@@ -27,3 +27,9 @@ export interface IPortfolio {
   fiis: Array<IPortfolioEntity>;
   stocks: Array<IPortfolioEntity>;
 }
+
+export interface PortfolioTemplateEntity {
+  id: number;
+  symbol: string;
+  weight: number;
+}
