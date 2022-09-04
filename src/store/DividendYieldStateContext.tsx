@@ -25,7 +25,7 @@ const useDY = () => {
     DividendYieldEntity[]
   >([]);
   const [hasMore, setHasMore] = useState<boolean>(true);
-  
+
   async function loadData() {
     setIsLoading(true);
     try {

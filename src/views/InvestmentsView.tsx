@@ -199,7 +199,9 @@ function InvestmentsView() {
 
       <DividendYieldOffCanva
         monthToShow={monthToShowDetail ?? ""}
-        onDismiss={() => setDyOffcanvaVisible(false)}
+        onDismiss={() => {
+          setDyOffcanvaVisible(false);
+        }}
         visible={dyOffcanvaVisible}
       />
 

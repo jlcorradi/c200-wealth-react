@@ -23,7 +23,6 @@ import ReportingView from "../views/ReportingView";
 import { SystemView } from "../views/SystemView";
 import { Sidebar } from "./Sidebar";
 import GlobalOffCanva from "../components/GlobalOffset";
-import { DashboardContextProvider } from "../store/DashBoardStateContext";
 import { ExpenseIncomeStateProvider } from "../store/ExpenseIncomeStateContext";
 
 export function SpaTemplate() {
@@ -90,16 +89,14 @@ export function SpaTemplate() {
           </div>
           <div className="content">
             <Switch>
-              <Route
-                path="/dashboard"
-                render={() => (
-                  <DashboardContextProvider>
-                    <DashboardView />
-                  </DashboardContextProvider>
-                )}
-              />
+              <Route path="/dashboard" render={() => <DashboardView />} />
               <Route path="/bank-accounts" component={BankAccountsView} />
-              <Route path="/investments" component={InvestmentsView} />
+              <Route
+                path="/investments"
+                render={() => {
+                  return <InvestmentsView></InvestmentsView>;
+                }}
+              />
               <Route
                 path="/expense-incomes"
                 render={() => (

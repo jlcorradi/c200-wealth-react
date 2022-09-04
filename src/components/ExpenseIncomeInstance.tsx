@@ -339,7 +339,7 @@ export const ExpenseIncomeInstance: FC<{
           <button className="primary">
             <i className="bx bx-save"></i> Save
           </button>
-          <button className="default" onClick={onDismiss}>
+          <button className="default" type="button" onClick={onDismiss}>
             <i className="bx bx-x"></i> Done
           </button>
         </div>

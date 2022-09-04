@@ -1,8 +1,8 @@
-import { createContext, useContext, useEffect, useReducer } from 'react';
-import RecurringExpenseIncomeService from '../services/RecurringExpenseIncomeService';
+import { createContext, useContext, useEffect, useReducer } from "react";
+import RecurringExpenseIncomeService from "../services/RecurringExpenseIncomeService";
 
-const SET_TO_LOAD = 'SET_TO_LOAD';
-const LOADED = 'LOADED';
+const SET_TO_LOAD = "SET_TO_LOAD";
+const LOADED = "LOADED";
 
 export const RecurringExpenseIncomeActions = {
   setToLoad: () => ({ type: SET_TO_LOAD }),

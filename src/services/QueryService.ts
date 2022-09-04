@@ -25,6 +25,14 @@ const QueryService = {
       params: { field, q: QueryService.resolveQ(filter) },
     });
   },
+  sumCustom: async (entity: string, customExpression: string, filter: any) => {
+    return http.get<number>(`${ENDPOINT}/${entity}/sum`, {
+      params: {
+        "custom-expression": customExpression,
+        q: QueryService.resolveQ(filter),
+      },
+    });
+  },
   resolveQ: (filter: any) =>
     Object.keys(filter)
       .map((field) => {

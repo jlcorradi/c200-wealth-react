@@ -21,8 +21,10 @@ import { combineComponents } from "./store/CombineProviders";
 import { PortfolioContextProvider } from "./store/PortfolioStateContext";
 import { WatchListContextProvider } from "./store/WatchListStateProvider";
 import React from "react";
+import { DashboardContextProvider } from "./store/DashBoardStateContext";
 
 const providers = [
+  DashboardContextProvider,
   DividendYieldStateContextProvider,
   PortfolioTemplateContextProvider,
   RecurringExpenseIncomeContextProvider,
