@@ -79,10 +79,13 @@ const useStockOperation = () => {
       page,
       filter,
       order,
-      operationList
+      operationList,
     },
     actions: {
-      changeFilter: (newFilter: any) => setFilter({ ...newFilter }),
+      changeFilter: (newFilter: any) => {
+        setPage(0);
+        setFilter({ ...newFilter });
+      },
       loadData,
       setOrder,
       setPage,
