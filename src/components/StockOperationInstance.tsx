@@ -33,7 +33,7 @@ const validationRules = [
 
 export const StockOperationInstance: FC<{
   onSave: (entity: StockOperationEntity) => void;
-  onHide: () => void;
+  onHide?: () => void;
 }> = ({ onSave }) => {
   const [submitted, setSubmitted] = useState(false);
   const [model, setModel] = useState(EMPTY_MODEL);

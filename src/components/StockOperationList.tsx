@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {
-  StockOperationActions,
-  useStockOperationContext,
-} from "../store/StockOperationStateContext";
+import { useStockOperationContext } from "../store/StockOperationStateContext";
+//@ts-ignore
 import CrudTable from "./CrudTable";
 import BankAccountFilterEditor from "./BankAccountFilterEditor";
 import classNames from "classnames";
@@ -10,6 +8,8 @@ import StockOperationService from "../services/StockOperationService";
 import OffCanva from "../template/OffCanva";
 import StockOperationInstance from "./StockOperationInstance";
 import QueryService from "../services/QueryService";
+import { StockOperationEntity } from "../types/stock";
+import { NumberHelper } from "../Helpers";
 
 const config = {
   fields: [
@@ -32,7 +32,10 @@ const config = {
       field: "operationType",
       label: "Type",
       allowFilter: true,
-      renderFilterEditor: (fieldFilterValue, onChange) => {
+      renderFilterEditor: (
+        fieldFilterValue: any,
+        onChange: (newFilter: any) => void
+      ) => {
         const [value] = fieldFilterValue ? fieldFilterValue : [""];
         return (
           <select onChange={(e) => onChange([e.target.value])} value={value}>
@@ -43,7 +46,7 @@ const config = {
         );
       },
       allowSort: true,
-      onRenderColumn: (item) => (
+      onRenderColumn: (item: StockOperationEntity) => (
         <span
           className={classNames({
             income: item.operationType === "PURCHASE",
@@ -60,7 +63,10 @@ const config = {
       functionalField: "bankAccount.id",
       allowSort: true,
       allowFilter: true,
-      renderFilterEditor: (fieldFilterValue, onChange) => (
+      renderFilterEditor: (
+        fieldFilterValue: any,
+        onChange: (newFilter: any) => void
+      ) => (
         <BankAccountFilterEditor
           fieldFilterValue={fieldFilterValue}
           onChange={onChange}
@@ -75,23 +81,11 @@ const config = {
 
 function StockOperationList() {
   const [instanceVisible, setInstanceVisible] = React.useState(false);
-  const [{ operationList, page, order, filter, hasMore }, dispatch] =
-    useStockOperationContext();
 
-  const [total, setTotal] = useState(0);
-
-  async function loadTotal() {
-    const { data: amount } = await QueryService.sumCustom(
-      "StockOperationEntity",
-      "sum(quantity*price)",
-      filter
-    );
-    setTotal(amount);
-  }
-
-  useEffect(() => {
-    loadTotal();
-  }, [filter]);
+  const {
+    state: { hasMore, page, filter, order, operationList, totalAmount },
+    actions: { loadData, changeFilter, setOrder, setPage },
+  } = useStockOperationContext();
 
   return (
     <>
@@ -116,28 +110,18 @@ function StockOperationList() {
         filter={filter}
         hasMore={hasMore}
         page={page}
-        onChangeFilter={(newFilter) =>
-          dispatch(StockOperationActions.changeFilter(newFilter))
-        }
-        onChangeOrder={(newOrder) =>
-          dispatch(StockOperationActions.changeOrder(newOrder))
-        }
-        onPageChange={(newPage) =>
-          dispatch(StockOperationActions.changeCurrentPage(newPage))
-        }
-        onDeleteClick={(item) => {
+        onChangeFilter={(newFilter: any) => changeFilter(newFilter)}
+        onChangeOrder={(newOrder: string) => setOrder(newOrder)}
+        onPageChange={(newPage: number) => setPage(newPage)}
+        onDeleteClick={(item: StockOperationEntity) => {
           if (window.confirm("Confirm delete record?")) {
-            StockOperationService.delete(item.id).then(() =>
-              dispatch(StockOperationActions.setToLoad())
-            );
+            StockOperationService.delete(item.id ?? 0).then(() => loadData());
           }
         }}
         renderFooter={() => (
-          <div className="flex align-items-space-between">
-            <div>
-              <span>Total:</span>
-              <strong>{total}</strong>
-            </div>
+          <div className="padding-v flex flex-row align-items-space-between">
+            <span className="flex-1">Total:</span>
+            <strong>{NumberHelper.formatBRL(totalAmount)}</strong>
           </div>
         )}
       />
@@ -148,9 +132,7 @@ function StockOperationList() {
         <div className="titlebar">
           <h3>New Operation</h3>
         </div>
-        <StockOperationInstance
-          onSave={(e) => dispatch(StockOperationActions.setToLoad())}
-        />
+        <StockOperationInstance onSave={(e) => loadData()} />
       </OffCanva>
     </>
   );
