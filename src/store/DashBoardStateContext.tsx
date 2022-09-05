@@ -35,7 +35,10 @@ const useDashboard = () => {
         setMonthlyExpenseIncomeSummary(monSum.data);
         setExpenseIncomeSum(genSum.data);
       })
-      .finally(() => setIsLoading(false));
+      .finally(() => {
+        setIsLoading(false);
+        setReloadPending(false);
+      });
   }, [reloadPending]);
 
   function markToReload() {
