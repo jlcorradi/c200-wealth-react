@@ -27,7 +27,7 @@ import { IPortfolioEntity } from "../types/portfolio";
 
 function InvestmentsView() {
   // @ts-ignore
-  const { state, dispatch } = usePortfolioStateContext();
+  const { state, actions } = usePortfolioStateContext();
   const { stocks, fiis, bySector } = state;
 
   const [portfolioItemVisible, setPortfolioItemVisible] = React.useState(false);
@@ -59,10 +59,6 @@ function InvestmentsView() {
       setDividendData(data);
       setTodalDyLast12Months(data.totalDividendsLast12Months);
     });
-  }, []);
-
-  React.useEffect(() => {
-    dispatch({ type: "LOAD" });
   }, []);
 
   let { monthArray, barSeries } = dividendData;

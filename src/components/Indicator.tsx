@@ -1,10 +1,20 @@
 import classNames from "classnames";
 import React from "react";
 
+export enum IndicatorIcon {
+  Label = "bx-label",
+  ArchiveIn = "bxs-archive-in",
+  ArchiveOut = "bxs-archive-out",
+  Detail = "bx-detail",
+  BuildingHouse = "bx-building-house",
+  CalendarSCheck = "bxs-calendar-check",
+  CalendarCheck = "bx-calendar-check",
+}
+
 export const Indicator: React.FC<{
   label: string;
   value: number | string;
-  icon?: string;
+  icon?: IndicatorIcon;
   color?: string;
 }> = ({ label, value, icon, color }) => {
   return (

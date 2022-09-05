@@ -8,14 +8,8 @@ import {
   ruleRunner,
   runValidations,
 } from "../Validatoion";
-import {
-  load as loadPortfolio,
-  usePortfolioStateContext,
-} from "../store/PortfolioStateContext";
-import {
-  StockOperationEntity,
-  StockOperationType,
-} from "../types/stock";
+import { usePortfolioStateContext } from "../store/PortfolioStateContext";
+import { StockOperationEntity, StockOperationType } from "../types/stock";
 import { BankAccountEntity } from "../types/bank-account";
 
 const EMPTY_MODEL: StockOperationEntity = {
@@ -48,7 +42,9 @@ export const StockOperationInstance: FC<{
 
   const a = usePortfolioStateContext();
 
-  const { dispatch: dispatchPortfolioEvent } = usePortfolioStateContext();
+  const {
+    actions: { load: loadPortfolio },
+  } = usePortfolioStateContext();
 
   useEffect(() => {
     BankAccountService.getInvestmentAccounts().then((response) =>
@@ -66,7 +62,7 @@ export const StockOperationInstance: FC<{
         if (onSave) {
           onSave(model);
         }
-        dispatchPortfolioEvent(loadPortfolio());
+        loadPortfolio();
         setModel({
           ...EMPTY_MODEL,
           operationType: model.operationType,

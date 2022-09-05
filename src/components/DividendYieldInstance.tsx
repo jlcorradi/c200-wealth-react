@@ -7,10 +7,7 @@ import {
   //@ts-ignore
 } from "../store/DividendYieldStateContext";
 import { useDashboardContext } from "../store/DashBoardStateContext";
-import {
-  load as loadPortfolio,
-  usePortfolioStateContext,
-} from "../store/PortfolioStateContext";
+import { usePortfolioStateContext } from "../store/PortfolioStateContext";
 import OffCanva from "../template/OffCanva";
 import {
   hasErrors,
@@ -49,8 +46,9 @@ export const DividendYieldInstance: FC<{
     state: { filter, hasMore, isLoading, page, totalAmount },
     actions: { loadData: loadDyList, setFilter, setOrder, setPage },
   } = useDividendYieldStateContext();
-  const { state, dispatch: dispatchPortfolioEvent } =
-    usePortfolioStateContext();
+  const {
+    actions: { load: loadPortfolio },
+  } = usePortfolioStateContext();
   const { actions: dashboardActions } = useDashboardContext();
 
   const [model, seetModel] = useState<DividendYieldEntity>(EMPTY_MODEL);
@@ -74,7 +72,7 @@ export const DividendYieldInstance: FC<{
     if (!hasErrors(newErrors)) {
       DividendYieldService.create(model).then(() => {
         loadDyList();
-        dispatchPortfolioEvent(loadPortfolio());
+        loadPortfolio();
         dashboardActions.markToReload();
         setSubmitted(false);
         seetModel({

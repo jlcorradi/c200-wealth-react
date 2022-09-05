@@ -1,103 +1,109 @@
-import React, { Dispatch } from "react";
+import moment from "moment";
+import React, { Dispatch, useState } from "react";
 import { ArrayHelper } from "../Helpers";
 import { PortfolioService } from "../services/PortfolioService";
+import QueryService from "../services/QueryService";
 
-type Action = "LOAD" | "SET_SUMMARY" | "SET_PORTFOLIO";
+const usePortfolio = () => {
+  const [summary, setSummary] = useState<{
+    totalCurrent: number;
+    totalInvested: number;
+    totalCurrentStocks: number;
+    totalInvestedFII: number;
+    totalCurrentFII: number;
+    totalInvestedStocks: number;
+  }>({
+    totalCurrent: 0,
+    totalInvested: 0,
+    totalCurrentStocks: 0,
+    totalInvestedFII: 0,
+    totalCurrentFII: 0,
+    totalInvestedStocks: 0,
+  });
 
-export interface IPortfolioAction {
-  type: Action;
-  payload?: any;
-}
+  const [stocks, setStocks] = useState<any[]>([]);
+  const [fiis, setFiis] = useState<any[]>([]);
+  const [bySector, setBySector] = useState<any[]>([]);
+  const [dyMonthTD, setDyMonthTD] = useState<number>(0);
+  const [dyYearTD, setDyYearTD] = useState<number>(0);
 
-const portfolioInitialState = {
-  portfolioLoadPending: true,
-  summary: {
-    totalCurrent: 0.0,
-    totalInvested: 0.0,
-    totalCurrentStocks: 0.0,
-    totalInvestedFII: 0.0,
-    totalCurrentFII: 0.0,
-    totalInvestedStocks: 0.0,
-  },
-  stocks: [],
-  fiis: [],
-  bySector: [],
-};
+  function load() {
+    QueryService.sum("DividendYieldEntity", "amount", {
+      paymentDate: [
+        moment().startOf("month").format("DD/MM/YYYY"),
+        moment().endOf("month").format("DD/MM/YYYY"),
+      ],
+    }).then(({ data }) => setDyMonthTD(data));
 
-export type PortfolioState = typeof portfolioInitialState;
+    PortfolioService.getPortfolio().then(({ data }) => {
+      setSummary({
+        totalCurrent: data.totalCurrent,
+        totalInvested: data.totalInvested,
+        totalCurrentStocks: data.totalCurrentStocks,
+        totalInvestedFII: data.totalInvestedFII,
+        totalCurrentFII: data.totalCurrentFII,
+        totalInvestedStocks: data.totalInvestedStocks,
+      });
 
-const PortfolioContext = React.createContext<{
-  state: PortfolioState;
-  dispatch: Dispatch<IPortfolioAction>;
-}>({
-  state: {} as unknown as PortfolioState,
-  dispatch: {} as unknown as Dispatch<IPortfolioAction>,
-});
+      // @ts-ignore
+      let bySectorArray = Object.keys(bySector).map((symbol) => ({
+        symbol,
+        // @ts-ignore
+        currentAmount: bySector[data.bySector],
+      }));
 
-export const load = (): IPortfolioAction => {
-  return { type: "LOAD" };
-};
+      setStocks(data.stocks);
+      setFiis(data.fiis);
+      setBySector(ArrayHelper.sortDescending(bySectorArray, "currentAmount"));
 
-const portfolioReducer = (state: any, { type, payload }: IPortfolioAction) => {
-  switch (type) {
-    case "LOAD":
-      return { ...state, portfolioLoadPending: true };
-    case "SET_SUMMARY":
-      return { ...state, summary: payload, portfolioLoadPending: false };
-    case "SET_PORTFOLIO":
-      return { ...state, portfolioLoadPending: false, ...payload };
-    default:
-      return state;
+      QueryService.sum("DividendYieldEntity", "amount", {
+        paymentDate: [
+          moment().startOf("month").format("DD/MM/YYYY"),
+          moment().endOf("month").format("DD/MM/YYYY"),
+        ],
+      }).then(({ data }) => setDyMonthTD(data));
+
+      QueryService.sum("DividendYieldEntity", "amount", {
+        paymentDate: [
+          moment().startOf("year").format("DD/MM/YYYY"),
+          moment().format("DD/MM/YYYY"),
+        ],
+      }).then(({ data }) => setDyYearTD(data));
+    });
   }
+
+  React.useEffect(() => {
+    load();
+  }, []);
+
+  return {
+    state: {
+      summary,
+      stocks,
+      fiis,
+      bySector,
+      dyMonthTD,
+      dyYearTD,
+    },
+    actions: {
+      load,
+    },
+  };
 };
+
+export type PortfolioType = ReturnType<typeof usePortfolio>;
+
+const PortfolioContext = React.createContext<PortfolioType>(
+  {} as unknown as PortfolioType
+);
 
 export const PortfolioContextProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
-  const [state, dispatch] = React.useReducer(
-    portfolioReducer,
-    portfolioInitialState
-  );
-  let { portfolioLoadPending } = state;
-
-  React.useEffect(() => {
-    if (portfolioLoadPending) {
-      PortfolioService.getPortfolio().then(({ data }) => {
-        dispatch({
-          type: "SET_SUMMARY",
-          payload: {
-            totalCurrent: data.totalCurrent,
-            totalInvested: data.totalInvested,
-            totalCurrentStocks: data.totalCurrentStocks,
-            totalInvestedFII: data.totalInvestedFII,
-            totalCurrentFII: data.totalCurrentFII,
-            totalInvestedStocks: data.totalInvestedStocks,
-          },
-        });
-
-        // @ts-ignore
-        let { stocks, fiis, bySector } = data;
-        let bySectorArray = Object.keys(bySector).map((symbol) => ({
-          symbol,
-          currentAmount: bySector[symbol],
-        }));
-        dispatch({
-          type: "SET_PORTFOLIO",
-          payload: {
-            stocks,
-            fiis,
-            bySector: ArrayHelper.sortDescending(
-              bySectorArray,
-              "currentAmount"
-            ),
-          },
-        });
-      });
-    }
-  }, [portfolioLoadPending]);
+  const ctx = usePortfolio();
 
   return (
-    <PortfolioContext.Provider value={{ state, dispatch }}>
+    <PortfolioContext.Provider value={ctx}>
       {children}
     </PortfolioContext.Provider>
   );

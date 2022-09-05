@@ -11,7 +11,7 @@ import { NotificationWidget } from "../components/NotificationWidget";
 import ReactApexChart from "react-apexcharts";
 // @ts-ignore
 import LoaderAndEmptyWrapper from "../components/LoaderAndEmptyWrapper";
-import { Indicator } from "../components/Indicator";
+import { Indicator, IndicatorIcon } from "../components/Indicator";
 //@ts-ignore
 import { useDashboardContext } from "../store/DashBoardStateContext";
 import { ExpenseIncomeSummaryItem } from "../services/DashboardService";
@@ -38,23 +38,23 @@ export const DashboardView: React.FC<{}> = () => {
           label="Pending Expenses"
           color="danger"
           value={NumberHelper.formatBRL(pendingExpenses ?? 0)}
-          icon="bx-archive-out"
+          icon={IndicatorIcon.ArchiveOut}
         />
         <Indicator
           label="Total Expenses"
           color="danger"
           value={NumberHelper.formatBRL(totalExpenses ?? 0)}
-          icon="bxs-archive-out"
+          icon={IndicatorIcon.ArchiveOut}
         />
         <Indicator
           label="Pending Income"
           value={NumberHelper.formatBRL(pendingIncome ?? 0)}
-          icon="bx-archive-in"
+          icon={IndicatorIcon.ArchiveIn}
         />
         <Indicator
           label="Total Income"
           value={NumberHelper.formatBRL(totalIncome ?? 0)}
-          icon="bxs-archive-in"
+          icon={IndicatorIcon.ArchiveIn}
         />
       </div>
 
