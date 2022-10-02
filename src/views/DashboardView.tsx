@@ -1,9 +1,9 @@
 import React from "react";
 // @ts-ignore
-import ExpensesPerCategory from "../components/ExpensesPerCategory";
+import { ExpensesIncomesPerCategory } from "../components/ExpensesPerCategory";
 // @ts-ignore
-import PendingExpenseIncome from "../components/PendingExpenseIncome";
-import { ArrayHelper, NumberHelper } from "../Helpers";
+import { PendingExpenseIncome } from "../components/PendingExpenseIncome";
+import { NumberHelper } from "../Helpers";
 // @ts-ignore
 import { useGlobalState } from "../store/GlobalStateContext";
 // @ts-ignore
@@ -15,6 +15,7 @@ import { Indicator, IndicatorIcon } from "../components/Indicator";
 //@ts-ignore
 import { useDashboardContext } from "../store/DashBoardStateContext";
 import { ExpenseIncomeSummaryItem } from "../services/DashboardService";
+import { PaymentType } from "../types/expense-income";
 
 export const DashboardView: React.FC<{}> = () => {
   const dashboardCtx = useDashboardContext();
@@ -22,8 +23,7 @@ export const DashboardView: React.FC<{}> = () => {
   const {
     state: { notifications },
   } = useGlobalState();
-  const { pendingExpenses, pendingIncome, totalExpenses, totalIncome } =
-    dashboardCtx.state.expenseIncomeSum;
+  const { pendingExpenses, pendingIncomes } = dashboardCtx.state;
 
   const { monthlyExpenseIncomeSummary } = dashboardCtx.state;
 
@@ -37,23 +37,23 @@ export const DashboardView: React.FC<{}> = () => {
         <Indicator
           label="Pending Expenses"
           color="danger"
-          value={NumberHelper.formatBRL(pendingExpenses ?? 0)}
+          value={NumberHelper.formatBRL(pendingExpenses.pendingAmount ?? 0)}
           icon={IndicatorIcon.ArchiveOut}
         />
         <Indicator
           label="Total Expenses"
           color="danger"
-          value={NumberHelper.formatBRL(totalExpenses ?? 0)}
+          value={NumberHelper.formatBRL(pendingExpenses.totalAmount ?? 0)}
           icon={IndicatorIcon.ArchiveOut}
         />
         <Indicator
           label="Pending Income"
-          value={NumberHelper.formatBRL(pendingIncome ?? 0)}
+          value={NumberHelper.formatBRL(pendingIncomes.pendingAmount ?? 0)}
           icon={IndicatorIcon.ArchiveIn}
         />
         <Indicator
           label="Total Income"
-          value={NumberHelper.formatBRL(totalIncome ?? 0)}
+          value={NumberHelper.formatBRL(pendingIncomes.totalAmount ?? 0)}
           icon={IndicatorIcon.ArchiveIn}
         />
       </div>
@@ -68,26 +68,43 @@ export const DashboardView: React.FC<{}> = () => {
         <div className="flex flex-row margin-v">
           <div className="flex flex-column padding flex-1">
             <div className="titlebar">
-              <h3>Pending Expenses / Incomes</h3>
+              <h3>Pending Expenses</h3>
             </div>
-            <PendingExpenseIncome />
+            <PendingExpenseIncome list={pendingExpenses.list} />
           </div>
           <div className="flex flex-column align-items-center justify-content-center padding flex-1 border-left">
             <div className="titlebar">
               <h3>Expenses per category</h3>
             </div>
-            <ExpensesPerCategory />
+            <ExpensesIncomesPerCategory paymentType="EXPENSE" />
           </div>
         </div>
       </div>
+
+      <div className="flex flex-column box border-bottom shadow margin-v">
+        <div className="flex flex-row margin-v">
+          <div className="flex flex-column padding flex-1">
+            <div className="titlebar">
+              <h3>Pending Incomes</h3>
+            </div>
+            <PendingExpenseIncome list={pendingIncomes.list} />
+          </div>
+          <div className="flex flex-column align-items-center justify-content-center padding flex-1 border-left">
+            <div className="titlebar">
+              <h3>Incomes per category</h3>
+            </div>
+            <ExpensesIncomesPerCategory paymentType="INCOME" />
+          </div>
+        </div>
+      </div>
+
       <div className="flex flex-column box border-bottom margin-v shadow">
         <div className="flex flex-row margin-v">
           <div className="flex flex-column padding flex-1">
             <LoaderAndEmptyWrapper
               isLoading={dashboardCtx.state.isLoading}
               isEmpty={
-                dashboardCtx.state.expenseIncomeSum.pendingExpensesIncomeList
-                  ?.length === 0
+                dashboardCtx.state.monthlyExpenseIncomeSummary?.length === 0
               }
               loadingMessage="Loading Expenses Evolution Chart"
             >

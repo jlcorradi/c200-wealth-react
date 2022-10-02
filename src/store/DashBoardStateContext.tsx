@@ -3,20 +3,28 @@ import {
   DashboardService,
   ExpenseIncomeSummaryItem,
 } from "../services/DashboardService";
-import { ExpenseIncomeSummary } from "../types/expense-income";
+import { ExpenseIncomeSummary, PaymentType } from "../types/expense-income";
 
 const useDashboard = () => {
   const [reloadPending, setReloadPending] = React.useState<boolean>(true);
+  
   const [monthlyExpenseIncomeSummary, setMonthlyExpenseIncomeSummary] =
     React.useState<ExpenseIncomeSummaryItem[]>([]);
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [expenseIncomeSum, setExpenseIncomeSum] =
+  
+    const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  
+    const [pendingExpenses, setPendingExpenses] =
     React.useState<ExpenseIncomeSummary>({
-      pendingExpenses: 0,
-      pendingIncome: 0,
-      totalExpenses: 0,
-      totalIncome: 0,
-      pendingExpensesIncomeList: [],
+      pendingAmount: 0,
+      totalAmount: 0,
+      list: [],
+    });
+  
+    const [pendingIncomes, setPendingIncomes] =
+    React.useState<ExpenseIncomeSummary>({
+      pendingAmount: 0,
+      totalAmount: 0,
+      list: [],
     });
   const dashboardService = new DashboardService();
 
@@ -29,11 +37,13 @@ const useDashboard = () => {
 
     Promise.all([
       dashboardService.getMonthlyExpenseIncomeSummary(),
-      dashboardService.getExpenseIncomeSummary(),
+      dashboardService.getPendingOrWithinTimeWindow(PaymentType.Expense),
+      dashboardService.getPendingOrWithinTimeWindow(PaymentType.Income),
     ])
-      .then(([monSum, genSum]) => {
+      .then(([monSum, expenses, incomes]) => {
         setMonthlyExpenseIncomeSummary(monSum.data);
-        setExpenseIncomeSum(genSum.data);
+        setPendingExpenses(expenses.data);
+        setPendingIncomes(incomes.data);
       })
       .finally(() => {
         setIsLoading(false);
@@ -46,7 +56,12 @@ const useDashboard = () => {
   }
 
   return {
-    state: { monthlyExpenseIncomeSummary, expenseIncomeSum, isLoading },
+    state: {
+      monthlyExpenseIncomeSummary,
+      pendingExpenses,
+      pendingIncomes,
+      isLoading,
+    },
     actions: { markToReload },
   };
 };

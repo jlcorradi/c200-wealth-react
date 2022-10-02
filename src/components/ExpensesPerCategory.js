@@ -5,7 +5,7 @@ import ChartOptions from "../ChartOptions";
 import Chart from "react-apexcharts";
 import LoaderAndEmptyWrapper from "./LoaderAndEmptyWrapper";
 
-function ExpensesPerCategory() {
+export function ExpensesIncomesPerCategory({ paymentType }) {
   useEffect(loadData, []);
   const [isLoading, setLoading] = useState(false);
   const [list, setList] = useState([]);
@@ -15,7 +15,7 @@ function ExpensesPerCategory() {
     let filter = {
       dateIni: moment().startOf("month").format("DD/MM/YYYY"),
       dateEnd: moment().endOf("month").format("DD/MM/YYYY"),
-      paymentType: "EXPENSE",
+      paymentType: paymentType,
       pageSize: 20000,
     };
 
@@ -51,10 +51,8 @@ function ExpensesPerCategory() {
         }}
         series={list.map((s) => s.amount)}
         type="donut"
-        width="360"
+        width="280"
       />
     </LoaderAndEmptyWrapper>
   );
 }
-
-export default ExpensesPerCategory;

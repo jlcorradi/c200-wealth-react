@@ -5,7 +5,7 @@ import classNames from "classnames";
 // @ts-ignore
 import LoaderAndEmptyWrapper from "./LoaderAndEmptyWrapper";
 // @ts-ignore
-import { GlobalActions, useGlobalState } from "../store/GlobalStateContext";
+import { useGlobalState } from "../store/GlobalStateContext";
 import { useDashboardContext } from "../store/DashBoardStateContext";
 import {
   ExpenseIncomeEntity,
@@ -13,9 +13,10 @@ import {
   PaymentType,
 } from "../types/expense-income";
 
-function PendingExpenseIncome() {
+export const PendingExpenseIncome: React.FC<{
+  list: ExpenseIncomeEntity[];
+}> = ({ list }) => {
   const { state, actions } = useDashboardContext();
-  const { pendingExpensesIncomeList } = state.expenseIncomeSum;
 
   const {
     actions: { showExpenseIncomeOffset },
@@ -30,7 +31,7 @@ function PendingExpenseIncome() {
       loadingMessage="Loading Pending Income/Expenses"
       emptyIcon="happy"
       isLoading={state.isLoading}
-      isEmpty={pendingExpensesIncomeList?.length === 0}
+      isEmpty={list.length === 0}
     >
       <table className="data-table">
         <thead>
@@ -44,7 +45,7 @@ function PendingExpenseIncome() {
           </tr>
         </thead>
         <tbody>
-          {pendingExpensesIncomeList
+          {list
             .filter((item: ExpenseIncomeEntity) => item.status === "PENDING")
             .map((item: ExpenseIncomeEntity) => (
               <tr
@@ -88,6 +89,4 @@ function PendingExpenseIncome() {
       </table>
     </LoaderAndEmptyWrapper>
   );
-}
-
-export default PendingExpenseIncome;
+};

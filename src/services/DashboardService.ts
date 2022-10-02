@@ -1,7 +1,6 @@
 import { http } from "../Http";
-import { ExpenseIncomeSummary } from "../types/expense-income";
-
-const ENDPOINT = "/api/v1/dashboard_stats";
+import { ExpenseIncomeSummary, PaymentType } from "../types/expense-income";
+import { EXPENSE_INCOME_ENDPOINT } from "./ExpenseIncomeService";
 
 export interface ExpenseIncomeSummaryItem {
   month: string;
@@ -10,15 +9,15 @@ export interface ExpenseIncomeSummaryItem {
 }
 
 export class DashboardService {
-  public getExpenseIncomeSummary() {
+  public getPendingOrWithinTimeWindow(paymentType: PaymentType) {
     return http.get<ExpenseIncomeSummary>(
-      `${ENDPOINT}/expense_income_summaries`
+      `${EXPENSE_INCOME_ENDPOINT}/pending_by_period?type=${paymentType}`
     );
   }
 
   public getMonthlyExpenseIncomeSummary() {
     return http.get<ExpenseIncomeSummaryItem[]>(
-      `${ENDPOINT}/monthly_expense_income_summary`
+      `${EXPENSE_INCOME_ENDPOINT}/monthly_expense_income_summary`
     );
   }
 }
