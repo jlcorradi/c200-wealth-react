@@ -70,9 +70,11 @@ export const ExpenseIncomeInstance: FC<{
     if (id) {
       setIsLoading(true);
       ExpenseIncomeService.get(id)
-        .then(({ data }) => setModel({ ...data }))
+        .then(({ data }) => setModel(Object.assign({}, data)))
         .finally(() => setIsLoading(false));
       setIsUpdating(true);
+      setPaymentDataDirty(false);
+      setErrors({});
     }
   }, [id]);
 
@@ -126,12 +128,13 @@ export const ExpenseIncomeInstance: FC<{
     let newModel = onChange(field, value);
     if (!paymentDataDirty) {
       setPaymentDataDirty(true);
-      setModel({
+      newModel = {
         ...newModel,
         paymentDate: newModel.dueDate,
         paidAmount: newModel.amount,
         status: PaymentStatus.Paid,
-      });
+      };
+      setModel(newModel);
     }
 
     let newErrors = runValidations(newModel, [

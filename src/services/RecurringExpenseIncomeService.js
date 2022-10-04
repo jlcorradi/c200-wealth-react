@@ -11,6 +11,7 @@ const RecurringExpenseIncomeService = {
     item.id
       ? http.put(`${ENDPOINT}/${item.id}`, item)
       : http.post(ENDPOINT, item),
+  trigger: () => http.put(`${ENDPOINT}/trigger_generation`)
 };
 
 export default RecurringExpenseIncomeService;
