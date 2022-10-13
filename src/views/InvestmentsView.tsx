@@ -89,7 +89,7 @@ function InvestmentsView() {
                 <h3>Distribuition</h3>
               </div>
               <StockDonutChart
-                width="380"
+                width="280"
                 stocks={[
                   {
                     symbol: "Stock",
@@ -143,7 +143,7 @@ function InvestmentsView() {
               </div>
               <div className="flex flex-row justify-content-center">
                 <StockDonutChart
-                  width="380"
+                  width="280"
                   stocks={showStocksBySector ? bySector : stocks}
                   onItemClick={portfolioItemClick}
                 />
@@ -162,7 +162,7 @@ function InvestmentsView() {
               </div>
               <div className="flex flex-row justify-content-center">
                 <StockDonutChart
-                  width="380"
+                  width="280"
                   stocks={fiis}
                   onItemClick={portfolioItemClick}
                 />

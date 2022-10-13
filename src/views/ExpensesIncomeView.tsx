@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useState } from "react";
 import { ExpenseIncomeCollection } from "../components/ExpenseIncomeCollection";
 import { ExpenseIncomeInstance } from "../components/ExpenseIncomeInstance";
 import GlobalFilter from "../components/GlobalFilter";
@@ -7,11 +7,10 @@ import { useDashboardContext } from "../store/DashBoardStateContext";
 import { useExpenseIncomeStateContext } from "../store/ExpenseIncomeStateContext";
 //@ts-ignore
 import Modal from "../template/Modal";
-import { ExpenseIncomeEntity } from "../types/expense-income";
 
 export const ExpensesIncomeView: FC<{}> = () => {
   const {
-    state: { isLoading, page, filter, order },
+    state: { filter },
     actions: { loadData, changeFilter },
   } = useExpenseIncomeStateContext();
   const [showingInstance, setShowingInstance] = useState<boolean>(false);

@@ -616,12 +616,12 @@ input[type='submit'].info:hover {
 
 .indicator h1,
 .indicator h3 {
-  font-size: 18px;
+  font-size: 1rem;
   
 }
 
 .indicator i {
-  font-size: 20px;
+  font-size: 1rem;
   
 }
 

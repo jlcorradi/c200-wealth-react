@@ -43,8 +43,7 @@ export const DividendYieldInstance: FC<{
   onDismiss: () => void;
 }> = ({ visible, onDismiss }) => {
   const {
-    state: { filter, hasMore, isLoading, page, totalAmount },
-    actions: { loadData: loadDyList, setFilter, setOrder, setPage },
+    actions: { loadData: loadDyList },
   } = useDividendYieldStateContext();
   const {
     actions: { load: loadPortfolio },

@@ -1,7 +1,6 @@
 import React, { FC } from "react";
 import { CustomCombo } from "./components/CustomCombo";
 import KeyValuePairService from "./services/KeyValuePairService";
-import { KeyValuePair } from "./types/key-value-pair";
 
 export const ExpenseIncomeCategoryCombo: FC<{
   className?: string;

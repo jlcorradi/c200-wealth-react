@@ -7,7 +7,6 @@ import classNames from "classnames";
 import StockOperationService from "../services/StockOperationService";
 import OffCanva from "../template/OffCanva";
 import StockOperationInstance from "./StockOperationInstance";
-import QueryService from "../services/QueryService";
 import { StockOperationEntity } from "../types/stock";
 import { NumberHelper } from "../Helpers";
 

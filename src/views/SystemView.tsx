@@ -1,7 +1,6 @@
 import React, { FC } from "react";
 import { Route } from "react-router-dom";
 import { Switch } from "react-router-dom";
-import { NavLink } from "react-router-dom";
 //@ts-ignore
 import Interop from "../components/Interop";
 //@ts-ignore

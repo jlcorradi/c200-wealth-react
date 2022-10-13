@@ -39,7 +39,7 @@ export const GlobalFilter: FC<{
       setExpenseIncomeCategoryList(response.data)
     );
     setModel({ ...filter });
-  }, []);
+  }, [filter]);
 
   function onSubmit(e: SyntheticEvent) {
     e.preventDefault();

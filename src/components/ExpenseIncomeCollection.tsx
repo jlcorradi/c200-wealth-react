@@ -14,7 +14,7 @@ export const ExpenseIncomeCollection: FC<{
 }> = ({ onEdit, onDelete, onPay }) => {
   const {
     state: { list, isLoading, hasMore, order },
-    actions: { setOrder, changeFilter, nextPage },
+    actions: { setOrder, nextPage },
   } = useExpenseIncomeStateContext();
 
   function getTotal() {

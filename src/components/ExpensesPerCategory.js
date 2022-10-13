@@ -6,7 +6,7 @@ import Chart from "react-apexcharts";
 import LoaderAndEmptyWrapper from "./LoaderAndEmptyWrapper";
 
 export function ExpensesIncomesPerCategory({ paymentType }) {
-  useEffect(loadData, []);
+  useEffect(loadData, [paymentType]);
   const [isLoading, setLoading] = useState(false);
   const [list, setList] = useState([]);
 
