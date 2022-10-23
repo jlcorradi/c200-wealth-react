@@ -21,6 +21,7 @@ export interface IPortfolio {
   totalCurrentFII: number;
   totalCurrentStocks: number;
   totalInvested: number;
+  outcome: number;
   totalInvestedFII: number;
   totalInvestedStocks: number;
 

@@ -12,6 +12,7 @@ const usePortfolio = () => {
     totalInvestedFII: number;
     totalCurrentFII: number;
     totalInvestedStocks: number;
+    outcome: number;
   }>({
     totalCurrent: 0,
     totalInvested: 0,
@@ -19,6 +20,7 @@ const usePortfolio = () => {
     totalInvestedFII: 0,
     totalCurrentFII: 0,
     totalInvestedStocks: 0,
+    outcome: 0,
   });
 
   const [stocks, setStocks] = useState<any[]>([]);
@@ -43,6 +45,7 @@ const usePortfolio = () => {
         totalInvestedFII: data.totalInvestedFII,
         totalCurrentFII: data.totalCurrentFII,
         totalInvestedStocks: data.totalInvestedStocks,
+        outcome: data.outcome,
       });
 
       // @ts-ignore
