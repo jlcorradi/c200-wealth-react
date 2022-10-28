@@ -26,7 +26,7 @@ export const DividendYieldOffCanva: FC<
           setTotal(
             data.reduce(
               (accumulator: number, next: DividendYieldEntity) =>
-                accumulator + next.amount,
+                accumulator + next.total,
               0
             )
           );
@@ -44,10 +44,10 @@ export const DividendYieldOffCanva: FC<
         <div className="padding">
           <SimpleTable
             labels={["Ticker", "Date", "Amount"]}
-            fields={["symbol", "paymentDate", "amount:toBRL"]}
+            fields={["symbol", "paymentDate", "total:toBRL"]}
             total={total}
             groupingField="yieldType"
-            groupingTotalField="amount"
+            groupingTotalField="total"
             items={list.sort((i, j) => (i.yieldType > j.yieldType ? 1 : -1))}
           ></SimpleTable>
         </div>

@@ -7,7 +7,7 @@ export type DividendYieldEntity = {
   yieldType: string;
   quantity: number;
   amount: number;
-  total?: number;
+  total: number;
 };
 
 export enum DividendYieldType {
