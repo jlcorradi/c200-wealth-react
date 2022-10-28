@@ -35,6 +35,7 @@ const EMPTY_MODEL: DividendYieldEntity = {
   yieldType: DividendYieldType.Rendiment,
   quantity: 0,
   amount: 0.0,
+  total: 0.0,
   bankAccountId: -1,
 };
 
@@ -177,6 +178,16 @@ export const DividendYieldInstance: FC<{
               type="text"
               name="quantity"
               value={model.quantity}
+              onChange={(e) => onChange(e.target.name, e.target.value)}
+            />
+          </div>
+          <div className="form-group padding-h">
+            <label htmlFor="total">total</label>
+            <input
+              readOnly
+              type="text"
+              name="total"
+              value={model.amount * model.quantity}
               onChange={(e) => onChange(e.target.name, e.target.value)}
             />
           </div>

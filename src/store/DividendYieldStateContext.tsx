@@ -38,7 +38,7 @@ const useDY = () => {
       );
       const dyTotalResponse = await QueryService.sum(
         "DividendYieldEntity",
-        "amount",
+        "total",
         filter
       );
       setTotalAmount(dyTotalResponse.data);

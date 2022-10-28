@@ -30,7 +30,7 @@ const usePortfolio = () => {
   const [dyYearTD, setDyYearTD] = useState<number>(0);
 
   function load() {
-    QueryService.sum("DividendYieldEntity", "amount", {
+    QueryService.sum("DividendYieldEntity", "total", {
       paymentDate: [
         moment().startOf("month").format("DD/MM/YYYY"),
         moment().endOf("month").format("DD/MM/YYYY"),
@@ -59,14 +59,14 @@ const usePortfolio = () => {
       setFiis(data.fiis);
       setBySector(ArrayHelper.sortDescending(bySectorArray, "currentAmount"));
 
-      QueryService.sum("DividendYieldEntity", "amount", {
+      QueryService.sum("DividendYieldEntity", "total", {
         paymentDate: [
           moment().startOf("month").format("DD/MM/YYYY"),
           moment().endOf("month").format("DD/MM/YYYY"),
         ],
       }).then(({ data }) => setDyMonthTD(data));
 
-      QueryService.sum("DividendYieldEntity", "amount", {
+      QueryService.sum("DividendYieldEntity", "total", {
         paymentDate: [
           moment().startOf("year").format("DD/MM/YYYY"),
           moment().format("DD/MM/YYYY"),

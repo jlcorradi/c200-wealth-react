@@ -38,10 +38,6 @@ const config = {
       ),
     },
     {
-      field: "quantity",
-      allowSort: true,
-    },
-    {
       field: "paymentDate",
       label: "Payment Date",
       allowSort: true,
@@ -69,7 +65,7 @@ const config = {
       },
     },
     {
-      field: "amount",
+      field: "total",
       label: "Amount",
       format: "brl",
       className: "text-right",
