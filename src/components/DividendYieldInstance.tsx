@@ -158,6 +158,16 @@ export const DividendYieldInstance: FC<{
           </div>
         </div>
         <div className="flex flex-row">
+          <div className="form-group padding-h">
+            <label htmlFor="quantity">Quantity</label>
+            <input
+              type="text"
+              name="quantity"
+              value={model.quantity}
+              onChange={(e) => onChange(e.target.name, e.target.value)}
+            />
+          </div>
+
           <div
             className={classNames("form-group", "padding-h", "flex-1", {
               error: (errors as any).amount,
@@ -171,15 +181,6 @@ export const DividendYieldInstance: FC<{
               onChange={(e) => onChange(e.target.name, e.target.value)}
             />
             <small>{(errors as any).amount}</small>
-          </div>
-          <div className="form-group padding-h">
-            <label htmlFor="quantity">Quantity</label>
-            <input
-              type="text"
-              name="quantity"
-              value={model.quantity}
-              onChange={(e) => onChange(e.target.name, e.target.value)}
-            />
           </div>
           <div className="form-group padding-h">
             <label htmlFor="total">total</label>
