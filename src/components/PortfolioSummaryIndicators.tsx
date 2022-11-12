@@ -11,7 +11,7 @@ export const PortfolioSummaryIndicators: React.FC<{
 
   React.useEffect(() => {}, []);
 
-  const outcome = summary?.outcome;
+  const outcome = summary?.outcome ?? 0;
 
   return (
     <>

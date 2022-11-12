@@ -15,7 +15,6 @@ import { Indicator, IndicatorIcon } from "../components/Indicator";
 //@ts-ignore
 import { useDashboardContext } from "../store/DashBoardStateContext";
 import { ExpenseIncomeSummaryItem } from "../services/DashboardService";
-import { PaymentType } from "../types/expense-income";
 
 export const DashboardView: React.FC<{}> = () => {
   const dashboardCtx = useDashboardContext();
