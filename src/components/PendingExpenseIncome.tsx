@@ -2,9 +2,7 @@ import React from "react";
 import { ExpenseIncomeService } from "../services/ExpenseIncomeService";
 import { NumberHelper, StringHelper } from "../Helpers";
 import classNames from "classnames";
-// @ts-ignore
 import LoaderAndEmptyWrapper from "./LoaderAndEmptyWrapper";
-// @ts-ignore
 import { useGlobalState } from "../store/GlobalStateContext";
 import { useDashboardContext } from "../store/DashBoardStateContext";
 import {

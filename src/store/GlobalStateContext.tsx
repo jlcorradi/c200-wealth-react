@@ -11,7 +11,7 @@ import QueryService from "../services/QueryService";
 import { NotificationEntity } from "../types/notification";
 
 const useGlobal = () => {
-  const [isLoading, setisLoading] = useState(false);
+  const [isLoading] = useState(false);
   const [isSidebarActive, setIsSidebarActive] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(Auth.isValidSession());
   const [notifications, setNotifications] = useState<NotificationEntity[]>([]);

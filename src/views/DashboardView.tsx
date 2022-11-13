@@ -1,18 +1,13 @@
 import React from "react";
 // @ts-ignore
 import { ExpensesIncomesPerCategory } from "../components/ExpensesPerCategory";
-// @ts-ignore
 import { PendingExpenseIncome } from "../components/PendingExpenseIncome";
 import { NumberHelper } from "../Helpers";
-// @ts-ignore
 import { useGlobalState } from "../store/GlobalStateContext";
-// @ts-ignore
 import { NotificationWidget } from "../components/NotificationWidget";
 import ReactApexChart from "react-apexcharts";
-// @ts-ignore
 import LoaderAndEmptyWrapper from "../components/LoaderAndEmptyWrapper";
 import { Indicator, IndicatorIcon } from "../components/Indicator";
-//@ts-ignore
 import { useDashboardContext } from "../store/DashBoardStateContext";
 import { ExpenseIncomeSummaryItem } from "../services/DashboardService";
 

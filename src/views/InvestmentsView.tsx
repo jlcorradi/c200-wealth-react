@@ -10,24 +10,17 @@ import { ArrayHelper } from "../Helpers";
 import { usePortfolioStateContext } from "../store/PortfolioStateContext";
 import DividendYieldService from "../services/DividendYieldService";
 import moment from "moment";
-// @ts-ignore
 import DividendYieldEvolutionChart from "../components/DividendYieldEvolutionChart";
-// @ts-ignore
 import DividendYieldOffCanva from "../components/DividendYieldOffCanva";
 import PortfolioItem from "../components/PortfolioItem";
-// @ts-ignore
 import DividendYieldList from "../components/DividendYieldList";
-// @ts-ignore
 import StockOperationList from "../components/StockOperationList";
-// @ts-ignore
 import OffCanva from "../template/OffCanva";
-// @ts-ignore
 import WatchListList from "../components/WatchListList";
 import { IPortfolioEntity } from "../types/portfolio";
 
 function InvestmentsView() {
-  // @ts-ignore
-  const { state, actions } = usePortfolioStateContext();
+  const { state } = usePortfolioStateContext();
   const { stocks, fiis, bySector } = state;
 
   const [portfolioItemVisible, setPortfolioItemVisible] = React.useState(false);
