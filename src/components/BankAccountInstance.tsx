@@ -55,7 +55,7 @@ export const BankAccountInstance: FC<{
     } else {
       setAccount(EMPTY_ACCOUNT);
     }
-  }, [id, EMPTY_ACCOUNT, isUpdating]);
+  }, [id]);
 
   function submitForm(e: SyntheticEvent) {
     e.preventDefault();

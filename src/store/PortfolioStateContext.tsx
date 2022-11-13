@@ -59,7 +59,7 @@ const usePortfolio = () => {
       setFiis(data.fiis);
       setBySector(ArrayHelper.sortDescending(bySectorArray, "currentAmount"));
 
-      QueryService.sum("DividendYieldEntity", "total", {
+      QueryService.sum("DividendYieldEntity", "quantity*amount", {
         paymentDate: [
           moment().startOf("month").format("DD/MM/YYYY"),
           moment().endOf("month").format("DD/MM/YYYY"),
